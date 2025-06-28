@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Domain;
+using Domain.DTO;
 using Database;
 
 namespace CompanyApi.Controllers
@@ -16,14 +17,19 @@ namespace CompanyApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCompany([FromBody] Company company, [FromServices] ICompanyRepository<Company> repository)
+        public async Task<IActionResult> CreateCompany([FromBody] CompanyDto companydto, [FromServices] ICompanyRepository<Company> repository)
         {
-            if (company == null)
+            if (companydto == null)
             {
                 return BadRequest("Company data is required.");
             }
             try
             {
+                Company company = new()
+                {
+                    Name = companydto.Name,
+                    Vat = companydto.Vat
+                };
                 await repository.createAsync(company);
                 return CreatedAtAction(nameof(CreateCompany), new { id = company.Id }, company);
             }
@@ -61,15 +67,17 @@ namespace CompanyApi.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateCompany([FromBody] Company company, [FromServices] ICompanyRepository<Company> repository)
+        public async Task<IActionResult> UpdateCompany([FromBody] CompanyDto companydto, [FromServices] ICompanyRepository<Company> repository)
         {
-            if (company == null)
+            if (companydto == null)
             {
                 return BadRequest("Company data is required");
             }
             try
             {
-                if (await repository.getCompanyByIdAsync(company.Id) == null)
+                var company = await repository.getCompanyByIdAsync(companydto.Id);
+
+                if (company == null)
                 {
                     return NotFound("Company Not Found");
                 }
