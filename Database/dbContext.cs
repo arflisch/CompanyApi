@@ -13,15 +13,7 @@ namespace Database
         }
 
         public virtual DbSet<Company> Companys { get; set; } = null!;
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseNpgsql("Host=localhost;Port=5433;Database=company_db;Username=cae_user;Password=cae");
-
-            }
-        }
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
