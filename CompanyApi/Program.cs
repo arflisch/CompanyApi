@@ -11,11 +11,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
 builder.Services.AddDbContext<dbContext>(options =>
 {
-    options.UseNpgsql(connectionString);
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 
