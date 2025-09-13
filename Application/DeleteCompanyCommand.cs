@@ -22,7 +22,7 @@ namespace Application
         {
             if (id <= 0)
             {
-                return Result.Fail("Valid Id is required");
+                return Result.Fail(new ValidationError("Valid Id is required"));
             }
 
             try
