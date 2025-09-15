@@ -27,7 +27,32 @@ namespace CompanyApi.Controllers
                 // Fix: Use the correct syntax for CreatedAtAction
                 return CreatedAtAction(nameof(CreateCompany), new { id = companydto.Id }, result);
             }
-            return BadRequest(result.Errors);
+
+            if (result.Errors.Any(e => e is ValidationError))
+            {
+                var errors = result.Errors
+                    .OfType<ValidationError>()
+                    .Select(e => e.Message)
+                    .ToArray();
+
+                var validationProblemDetails = new ValidationProblemDetails
+                {
+                    Title = "Validation Errors",
+                    Status = 400, // Fix: Replace StatusCode.Status400BadRequest with the correct status code value
+                    
+                };
+                validationProblemDetails.Errors.Add("ValidationErrors", errors);
+
+                return ValidationProblem((ValidationProblemDetails)validationProblemDetails.Errors);
+            }
+
+            var problemDetails = new ProblemDetails
+            {
+                Title = "An error occurred",
+                Status = StatusCodes.Status400BadRequest,
+                Detail = string.Join("; ", result.Errors.Select(e => e.Message))
+            };
+            return BadRequest(problemDetails);
         }
 
         [HttpDelete("{id:long}")]
@@ -38,7 +63,30 @@ namespace CompanyApi.Controllers
             {
                 return Ok();
             }
-            return BadRequest(result.Errors);
+            if (result.Errors.Any(e => e is ValidationError))
+            {
+                var errors = result.Errors
+                    .OfType<ValidationError>()
+                    .Select(e => e.Message)
+                    .ToArray();
+
+                var validationProblemDetails = new ValidationProblemDetails
+                {
+                    Title = "Validation Errors",
+                    Status = 400,
+                };
+                validationProblemDetails.Errors.Add("ValidationErrors", errors);
+
+                return ValidationProblem((ValidationProblemDetails)validationProblemDetails.Errors);
+            }
+
+            var problemDetails = new ProblemDetails
+            {
+                Title = "An error occurred",
+                Status = StatusCodes.Status400BadRequest,
+                Detail = string.Join("; ", result.Errors.Select(e => e.Message))
+            };
+            return BadRequest(problemDetails);
         }
 
         [HttpPut]
@@ -49,7 +97,30 @@ namespace CompanyApi.Controllers
             {
                 return Ok();
             }
-            return BadRequest(result.Errors);
+            
+
+            if (result.Errors.Any(e => e is ValidationError))
+            {
+                var errors = result.Errors
+                    .OfType<ValidationError>()
+                    .Select(e => e.Message)
+                    .ToArray();
+                var validationProblemDetails = new ValidationProblemDetails
+                {
+                    Title = "Validation Errors",
+                    Status = 400, // Fix: Replace StatusCode.Status400BadRequest with the correct status code value
+                };
+                validationProblemDetails.Errors.Add("ValidationErrors", errors);
+                return ValidationProblem((ValidationProblemDetails)validationProblemDetails.Errors);
+            }
+
+            var problemDetails = new ProblemDetails
+            {
+                Title = "An error occurred",
+                Status = StatusCodes.Status400BadRequest,
+                Detail = string.Join("; ", result.Errors.Select(e => e.Message))
+            };
+            return BadRequest(problemDetails);
         }
 
         [HttpPatch("name/{id:long}/{Name}")]
@@ -71,7 +142,28 @@ namespace CompanyApi.Controllers
             {
                 return Ok();
             }
-            return BadRequest(result.Errors);
+            if (result.Errors.Any(e => e is ValidationError))
+            {
+                var errors = result.Errors
+                    .OfType<ValidationError>()
+                    .Select(e => e.Message)
+                    .ToArray();
+                var validationProblemDetails = new ValidationProblemDetails
+                {
+                    Title = "Validation Errors",
+                    Status = 400, // Fix: Replace StatusCode.Status400BadRequest with the correct status code value
+                };
+                validationProblemDetails.Errors.Add("ValidationErrors", errors);
+                return ValidationProblem((ValidationProblemDetails)validationProblemDetails.Errors);
+            }
+
+            var problemDetails = new ProblemDetails
+            {
+                Title = "An error occurred",
+                Status = StatusCodes.Status400BadRequest,
+                Detail = string.Join("; ", result.Errors.Select(e => e.Message))
+            };
+            return BadRequest(problemDetails);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Application
             {
                 if (await repository.getCompanyByIdAsync(company.Id) == null)
                 {
-                    return Result.Fail("Company Not Found");
+                    return Result.Fail(new ValidationError("Company Not Found"));
                 }
                 await repository.patchAsync(company);
                 return Result.Ok();
@@ -51,7 +51,7 @@ namespace Application
             {
                 if (await repository.getCompanyByIdAsync(company.Id) == null)
                 {
-                    return Result.Fail("Company Not Found");
+                    return Result.Fail(new ValidationError("Company Not Found"));
                 }
                 await repository.patchAsync(company);
                 return Result.Ok();
