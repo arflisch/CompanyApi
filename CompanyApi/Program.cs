@@ -12,13 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
-    .Enrich.FromLogContext()
-    .Enrich.WithEnvironmentName()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-    .WriteTo.Console()
     .CreateLogger();
 
-builder.Host.UseSerilog();
+builder.Host.UseSerilog(Log.Logger);
+
 
 builder.AddServiceDefaults();
 
