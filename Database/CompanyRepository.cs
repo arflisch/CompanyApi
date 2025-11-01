@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace Database
 {
-    public class CompanyContext : ICompanyRepository<Company>
+    public class CompanyRepository : ICompanyRepository<Company>
     {
         private readonly dbContext _dbContext;
-        public CompanyContext(dbContext dbContext)
+        public CompanyRepository(dbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -28,7 +29,7 @@ namespace Database
 
         public async Task patchAsync(Company company)
         {
-            var existing = await _dbContext.Companys.FindAsync(company.Id);
+            var existing = await getCompanyByIdAsync(company.Id);
             if (existing != null)
             {
                 if (!string.IsNullOrEmpty(company.Name))
@@ -48,7 +49,7 @@ namespace Database
 
         public async Task<Company?> getCompanyByIdAsync(long id)
         {
-            return await _dbContext.Companys.FindAsync(id);
+            return await _dbContext.Companys.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
         }
     }
 }

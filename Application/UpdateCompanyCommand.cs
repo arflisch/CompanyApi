@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Metrics;
 
 namespace Application
 {
@@ -17,11 +18,13 @@ namespace Application
         private static readonly ActivitySource ActivitySource = new("CompanyApi.Application");
         private readonly ICompanyRepository<Company> repository;
         private readonly IValidator<CompanyDto> validator;
+        private readonly CompanyMetrics companyMetrics;
 
-        public UpdateCompanyCommand(ICompanyRepository<Company> repository, IValidator<CompanyDto> validator)
+        public UpdateCompanyCommand(ICompanyRepository<Company> repository, IValidator<CompanyDto> validator, CompanyMetrics companyMetrics)
         {
             this.repository = repository;
             this.validator = validator;
+            this.companyMetrics = companyMetrics;
         }
 
         public async Task<Result> UpdateCompanyAsync(CompanyDto companyDto)
@@ -78,6 +81,7 @@ namespace Application
                     dbActivity?.SetStatus(ActivityStatusCode.Ok, "Company updated successfully in database");
                     dbActivity?.SetTag("CompanyId", company.Id);
                     activity?.SetTag("CompanyId", company.Id);
+                    companyMetrics.RecordCompanyUpdated();
                     return Result.Ok();
                 }
                 catch (Exception ex)

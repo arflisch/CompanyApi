@@ -26,6 +26,7 @@ builder.Services.AddTransient<ICreateCompanyCommand, CreateCompanyCommand>();
 builder.Services.AddTransient<IUpdateCompanyCommand, UpdateCompanyCommand>();
 builder.Services.AddTransient<IDeleteCompanyCommand, DeleteCompanyCommand>();
 builder.Services.AddTransient<IPatchCompanyCommand, PatchCompanyCommand>();
+builder.Services.AddSingleton<Application.Metrics.CompanyMetrics>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -39,7 +40,7 @@ builder.Services.AddDbContext<dbContext>(options =>
 });
 
 // Register the repository
-builder.Services.AddScoped<ICompanyRepository<Company>, CompanyContext>();
+builder.Services.AddScoped<ICompanyRepository<Company>, CompanyRepository>();
 
 
 var app = builder.Build();

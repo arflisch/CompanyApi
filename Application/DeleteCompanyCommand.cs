@@ -1,4 +1,5 @@
-﻿using Database;
+﻿using Application.Metrics;
+using Database;
 using Domain;
 using FluentResults;
 using System.Diagnostics;
@@ -9,10 +10,12 @@ namespace Application
     {
         private static readonly ActivitySource ActivitySource = new("CompanyApi.Application");
         private readonly ICompanyRepository<Company> repository;
+        private readonly CompanyMetrics companyMetrics;
 
-        public DeleteCompanyCommand(ICompanyRepository<Company> repository)
+        public DeleteCompanyCommand(ICompanyRepository<Company> repository, CompanyMetrics companyMetrics)
         {
             this.repository = repository;
+            this.companyMetrics = companyMetrics;
         }
 
         public async Task<Result> DeleteCompanyAsync(long id)
@@ -71,6 +74,7 @@ namespace Application
                         }));
 
                     activity?.SetStatus(ActivityStatusCode.Ok);
+                    companyMetrics.RecordCompanyDeleted();
                     return Result.Ok();
                 }
                 catch (Exception ex)
