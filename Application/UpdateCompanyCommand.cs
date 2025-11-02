@@ -4,58 +4,93 @@ using Domain.DTO;
 using FluentResults;
 using FluentValidation;
 using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Metrics;
 
 namespace Application
 {
     public class UpdateCompanyCommand : IUpdateCompanyCommand
     {
+        private static readonly ActivitySource ActivitySource = new("CompanyApi.Application");
         private readonly ICompanyRepository<Company> repository;
         private readonly IValidator<CompanyDto> validator;
+        private readonly CompanyMetrics companyMetrics;
 
-        public UpdateCompanyCommand(ICompanyRepository<Company> repository, IValidator<CompanyDto> validator)
+        public UpdateCompanyCommand(ICompanyRepository<Company> repository, IValidator<CompanyDto> validator, CompanyMetrics companyMetrics)
         {
             this.repository = repository;
             this.validator = validator;
+            this.companyMetrics = companyMetrics;
         }
 
         public async Task<Result> UpdateCompanyAsync(CompanyDto companyDto)
         {
-            if (companyDto == null)
-            {
-                return Result.Fail("Company data is required");
-            }
+            using var activity = ActivitySource.StartActivity("UpdateCompanyCommand.UpdateCompanyAsync");
 
-            var validationResult = await validator.ValidateAsync(companyDto);
-            if (!validationResult.IsValid)
+            using (var validationActivity = ActivitySource.StartActivity("Validate CompanyDto"))
             {
-                var results = Result.Fail("Validation errors occurred.");
-                foreach (var error in validationResult.Errors)
+                if (companyDto == null)
                 {
-                    results.WithError(new ValidationError(error.ErrorMessage));
-                }
-                return results;
-            }
-
-            try
-            {
-                var company = await repository.getCompanyByIdAsync(companyDto.Id);
-
-                if (company == null)
-                {
-                    return Result.Fail("Company Not Found");
+                    validationActivity?.SetStatus(ActivityStatusCode.Error, "Company data is null");
+                    return Result.Fail("Company data is required");
                 }
 
-                await repository.updateAsync(company);
-                return Result.Ok();
+                validationActivity?.SetTag("CompanyDto.Id", companyDto.Id);
+                validationActivity?.SetTag("CompanyDto.vat", companyDto.Vat);
+
+                var validationResult = await validator.ValidateAsync(companyDto);
+                if (!validationResult.IsValid)
+                {
+
+                    validationActivity?.SetStatus(ActivityStatusCode.Error, "Validation failed for CompanyDto");
+                    validationActivity?.SetTag("ValidationErrorsCount", validationResult.Errors.Count);
+
+                    var results = Result.Fail("Validation errors occurred.");
+                    foreach (var error in validationResult.Errors)
+                    {
+                        results.WithError(new ValidationError(error.ErrorMessage));
+                        validationActivity?.AddEvent(new ActivityEvent("ValidationError", tags: new ActivityTagsCollection
+                        {
+                            { "PropertyName", error.PropertyName },
+                            { "ErrorMessage", error.ErrorMessage }
+                        }));
+                    }
+                    return results;
+                }
+                validationActivity?.SetStatus(ActivityStatusCode.Ok, "Validation succeeded for CompanyDto");
             }
-            catch (Exception ex)
+            
+
+            using (var dbActivity = ActivitySource.StartActivity("Update Company in Database"))
             {
-                return Result.Fail($"Error creating company: {ex.Message}");
-            }
+                try
+                {
+                    var company = await repository.getCompanyByIdAsync(companyDto.Id);
+
+                    if (company == null)
+                    {
+                        return Result.Fail("Company Not Found");
+                    }
+
+                    await repository.updateAsync(company);
+
+                    dbActivity?.SetStatus(ActivityStatusCode.Ok, "Company updated successfully in database");
+                    dbActivity?.SetTag("CompanyId", company.Id);
+                    activity?.SetTag("CompanyId", company.Id);
+                    companyMetrics.RecordCompanyUpdated();
+                    return Result.Ok();
+                }
+                catch (Exception ex)
+                {
+                    dbActivity?.SetStatus(ActivityStatusCode.Error, "Error updating company in database");
+                    activity?.SetStatus(ActivityStatusCode.Error, "Error updating company in database");
+                    return Result.Fail($"Error creating company: {ex.Message}");
+                }
+            } 
         }
     }
 }
