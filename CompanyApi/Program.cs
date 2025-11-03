@@ -21,7 +21,8 @@ builder.AddServiceDefaults();
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddDapr();
+
 builder.Services.AddTransient<ICreateCompanyCommand, CreateCompanyCommand>();
 builder.Services.AddTransient<IUpdateCompanyCommand, UpdateCompanyCommand>();
 builder.Services.AddTransient<IDeleteCompanyCommand, DeleteCompanyCommand>();
@@ -56,10 +57,13 @@ try
         app.UseSwagger();
         app.UseSwaggerUI();
     }
+    app.UseCloudEvents();
 
     app.UseHttpsRedirection();
     app.UseAuthorization();
     app.MapControllers();
+
+    app.MapSubscribeHandler();
 
     app.Run();
 }
