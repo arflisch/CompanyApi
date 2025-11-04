@@ -5,6 +5,8 @@ using FluentResults;
 using FluentValidation;
 using System.Diagnostics;
 using Application.Metrics;
+using Dapr;
+using Dapr.Client;
 
 namespace Application
 {
@@ -15,12 +17,14 @@ namespace Application
         private readonly ICompanyRepository<Company> repository;
         private readonly IValidator<CompanyDto> validator;
         private readonly CompanyMetrics companyMetrics;
+        private readonly DaprClient daprClient;
 
-        public CreateCompanyCommand(ICompanyRepository<Company> repository, IValidator<CompanyDto> validator, CompanyMetrics companyMetrics)
+        public CreateCompanyCommand(ICompanyRepository<Company> repository, IValidator<CompanyDto> validator, CompanyMetrics companyMetrics, DaprClient daprClient)
         {
             this.repository = repository;
             this.validator = validator;
             this.companyMetrics = companyMetrics;
+            this.daprClient = daprClient;
         }
 
         public async Task<Result> CreateCompanyAsync(CompanyDto companyDto)
@@ -79,6 +83,8 @@ namespace Application
                         persistenceActivity?.SetTag("company.id", company.Id);
                         activity?.SetTag("company.id", company.Id);
                         companyMetrics.RecordCompanyCreated();
+
+                        await daprClient.PublishEventAsync("rabbitmq-pubsub", "companycreated", companyDto);
 
                         return Result.Ok();
                     }

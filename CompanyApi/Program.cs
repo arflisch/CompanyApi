@@ -6,6 +6,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
+using Dapr.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +23,7 @@ builder.AddServiceDefaults();
 // Add services to the container.
 
 builder.Services.AddControllers().AddDapr();
-
+builder.Services.AddDaprClient();
 builder.Services.AddTransient<ICreateCompanyCommand, CreateCompanyCommand>();
 builder.Services.AddTransient<IUpdateCompanyCommand, UpdateCompanyCommand>();
 builder.Services.AddTransient<IDeleteCompanyCommand, DeleteCompanyCommand>();

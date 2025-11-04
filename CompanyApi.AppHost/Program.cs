@@ -9,8 +9,15 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 
 // Add your API project and wire up the connection string from the Postgres resource
-builder.AddProject<Projects.CompanyApi>("companyapi")
-    .WithEnvironment("ConnectionStrings__DefaultConnection", "Host=localhost;Port=5433;Database=company_db;Username=cae_user;Password=cae")
-    .WithDaprSidecar();
+var companyApi = builder.AddProject<Projects.CompanyApi>("companyapi")
+    .WithEnvironment("ConnectionStrings__DefaultConnection", "Host=localhost;Port=5433;Database=company_db;Username=cae_user;Password=cae");
+
+companyApi
+    .WithDaprSidecar(new DaprSidecarOptions
+    {
+        AppId = "company-api",   
+        ResourcesPaths = ["./../Dapr/Development"]
+
+    });
 
 builder.Build().Run();
