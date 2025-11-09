@@ -7,15 +7,11 @@ spec:
   version: v1
   metadata:
   - name: connectionString
-    value: "amqp://localhost:5672"
-  - name: username
-    value: guest
-  - name: password
-    value: guest
-  - name: consumerID
-    value: channel1
+    value: "amqp://toto:toto1@localhost:5672/toto"
   - name: durable
-    value: false
+    value: true
   - name: deletedWhenUnused
     value: false
+  - name: consumerID
+    value: channel1
 
