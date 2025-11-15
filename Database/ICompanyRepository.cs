@@ -15,6 +15,8 @@ namespace Database
         Task deleteAsync(Company company);
         Task patchAsync(Company company);
 
+        Task<List<Company>> getAllCompaniesAsync();
+
         Task<Company?> getCompanyByIdAsync(long id);
     }
 }

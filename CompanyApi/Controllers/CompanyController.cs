@@ -1,4 +1,5 @@
 ﻿using Application;
+using Domain;
 using Domain.DTO;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +15,13 @@ namespace CompanyApi.Controllers
         public CompanyController(ILogger<CompanyController> logger)
         {
             _logger = logger;
+        }
+
+        [HttpGet]
+        public async Task<List<Company>> GetAllCompanies([FromServices] IGetCompaniesCommand getCompaniesCommand) 
+        {
+            _logger.LogInformation("Retrieving all companies");
+            return await getCompaniesCommand.GetAllCompaniesAsync();
         }
 
         [HttpPost]

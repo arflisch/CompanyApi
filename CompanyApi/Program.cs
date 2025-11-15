@@ -28,6 +28,7 @@ builder.Services.AddTransient<ICreateCompanyCommand, CreateCompanyCommand>();
 builder.Services.AddTransient<IUpdateCompanyCommand, UpdateCompanyCommand>();
 builder.Services.AddTransient<IDeleteCompanyCommand, DeleteCompanyCommand>();
 builder.Services.AddTransient<IPatchCompanyCommand, PatchCompanyCommand>();
+builder.Services.AddTransient<IGetCompaniesCommand, GetCompaniesCommand>();
 builder.Services.AddSingleton<Application.Metrics.CompanyMetrics>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

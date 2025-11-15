@@ -51,5 +51,10 @@ namespace Database
         {
             return await _dbContext.Companys.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
         }
+
+        public async Task<List<Company>> getAllCompaniesAsync()
+        {
+            return await _dbContext.Companys.AsNoTracking().ToListAsync();
+        }
     }
 }
