@@ -9,9 +9,11 @@ spec:
   - name: connectionString
     value: "amqp://toto:toto1@localhost:5672/toto"
   - name: durable
-    value: true
+    value: "true"
   - name: deletedWhenUnused
-    value: false
+    value: "false"
   - name: consumerID
-    value: channel1
+    value: "channel1"
+scopes:
+- company-api
 

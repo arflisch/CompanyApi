@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.0.11201.2 d18.0
+VisualStudioVersion = 18.0.11201.2
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompanyApi", "CompanyApi\CompanyApi.csproj", "{5FF3C0CD-05B2-45D7-990D-6985097151D5}"
 EndProject
@@ -20,6 +20,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Development", "Development", "{7C049F85-5AA5-476B-92D9-0DBC06189520}"
 	ProjectSection(SolutionItems) = preProject
 		Dapr\Development\RabbitMQ.yml = Dapr\Development\RabbitMQ.yml
+		subscription.yml = subscription.yml
 	EndProjectSection
 EndProject
 Global
