@@ -24,9 +24,9 @@ namespace CompanyApi.Controllers
             var result = await createCompanyCommand.CreateCompanyAsync(companydto);
             if (result.IsSuccess)
             {
-                _logger.LogInformation("Company created successfully with Id: {CompanyId}", companydto.Id);
+                _logger.LogInformation("Company created successfully");
                 // Fix: Use the correct syntax for CreatedAtAction
-                return CreatedAtAction(nameof(CreateCompany), new { id = companydto.Id }, result);
+                return CreatedAtAction(nameof(CreateCompany), result);
             }
 
             if (result.Errors.Any(e => e is ValidationError))
@@ -99,15 +99,15 @@ namespace CompanyApi.Controllers
             return BadRequest(problemDetails);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateCompany([FromBody] CompanyDto companydto, [FromServices] IUpdateCompanyCommand updateCompanyCommand)
+        [HttpPut("{id:long}")]
+        public async Task<IActionResult> UpdateCompany(long id, [FromBody] CompanyDto companydto, [FromServices] IUpdateCompanyCommand updateCompanyCommand)
         {
-            _logger.LogInformation("Updating company with Id: {CompanyId}", companydto.Id);
+            _logger.LogInformation("Updating company with Id: {CompanyId}", id);
 
-            var result = await updateCompanyCommand.UpdateCompanyAsync(companydto);
+            var result = await updateCompanyCommand.UpdateCompanyAsync(id, companydto);
             if (result.IsSuccess)
             {
-                _logger.LogInformation("Company with Id: {CompanyId} updated successfully", companydto.Id);
+                _logger.LogInformation("Company with Id: {CompanyId} updated successfully", id);
                 return Ok();
             }
             
@@ -119,7 +119,7 @@ namespace CompanyApi.Controllers
                     .Select(e => e.Message)
                     .ToArray();
 
-                _logger.LogWarning("Validation errors occurred while updating company with Id: {CompanyId}. Errors: {Errors}", companydto.Id, string.Join(", ", errors));
+                _logger.LogWarning("Validation errors occurred while updating company with Id: {CompanyId}. Errors: {Errors}", id, string.Join(", ", errors));
 
                 var validationProblemDetails = new ValidationProblemDetails
                 {
@@ -136,7 +136,7 @@ namespace CompanyApi.Controllers
                 Status = StatusCodes.Status400BadRequest,
                 Detail = string.Join("; ", result.Errors.Select(e => e.Message))
             };
-            _logger.LogError("An error occurred while updating company with Id: {CompanyId}. Detail: {Detail}", companydto.Id, problemDetails.Detail);
+            _logger.LogError("An error occurred while updating company with Id: {CompanyId}. Detail: {Detail}", id, problemDetails.Detail);
             return BadRequest(problemDetails);
         }
 

@@ -10,6 +10,6 @@ namespace Application
 {
     public interface IUpdateCompanyCommand
     {
-        Task<Result> UpdateCompanyAsync(CompanyDto companyDto);
+        Task<Result> UpdateCompanyAsync(long id, CompanyDto companyDto);
     }
 }

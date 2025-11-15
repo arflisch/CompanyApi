@@ -27,7 +27,7 @@ namespace Application
             this.companyMetrics = companyMetrics;
         }
 
-        public async Task<Result> UpdateCompanyAsync(CompanyDto companyDto)
+        public async Task<Result> UpdateCompanyAsync(long id, CompanyDto companyDto)
         {
             using var activity = ActivitySource.StartActivity("UpdateCompanyCommand.UpdateCompanyAsync");
 
@@ -39,8 +39,6 @@ namespace Application
                     return Result.Fail("Company data is required");
                 }
 
-                validationActivity?.SetTag("CompanyDto.Id", companyDto.Id);
-                validationActivity?.SetTag("CompanyDto.vat", companyDto.Vat);
 
                 var validationResult = await validator.ValidateAsync(companyDto);
                 if (!validationResult.IsValid)
@@ -69,12 +67,15 @@ namespace Application
             {
                 try
                 {
-                    var company = await repository.getCompanyByIdAsync(companyDto.Id);
+                    var company = await repository.getCompanyByIdAsync(id);
 
                     if (company == null)
                     {
                         return Result.Fail("Company Not Found");
                     }
+
+                    company.Name = companyDto.Name;
+                    company.Vat = companyDto.Vat;
 
                     await repository.updateAsync(company);
 
