@@ -5,6 +5,9 @@ using FluentResults;
 using FluentValidation;
 using System.Diagnostics;
 using Application.Metrics;
+using Dapr;
+using Dapr.Client;
+using Microsoft.Extensions.Logging;
 
 namespace Application
 {
@@ -15,12 +18,21 @@ namespace Application
         private readonly ICompanyRepository<Company> repository;
         private readonly IValidator<CompanyDto> validator;
         private readonly CompanyMetrics companyMetrics;
+        private readonly DaprClient daprClient;
+        private readonly ILogger<CreateCompanyCommand> logger;
 
-        public CreateCompanyCommand(ICompanyRepository<Company> repository, IValidator<CompanyDto> validator, CompanyMetrics companyMetrics)
+        public CreateCompanyCommand(
+            ICompanyRepository<Company> repository, 
+            IValidator<CompanyDto> validator, 
+            CompanyMetrics companyMetrics, 
+            DaprClient daprClient,
+            ILogger<CreateCompanyCommand> logger)
         {
             this.repository = repository;
             this.validator = validator;
             this.companyMetrics = companyMetrics;
+            this.daprClient = daprClient;
+            this.logger = logger;
         }
 
         public async Task<Result> CreateCompanyAsync(CompanyDto companyDto)
@@ -80,6 +92,22 @@ namespace Application
                         activity?.SetTag("company.id", company.Id);
                         companyMetrics.RecordCompanyCreated();
 
+                        // Publish event with better error handling and logging
+                        try
+                        {
+                            logger.LogInformation("Attempting to publish CompanyCreated event to Dapr. PubSub: rabbitmq-pubsub, Topic: companycreated, Company: {Name}", companyDto.Name);
+                            
+                            await daprClient.PublishEventAsync("rabbitmq-pubsub", "companycreated", companyDto);
+                            
+                            logger.LogInformation("Successfully published CompanyCreated event for company: {Name}", companyDto.Name);
+                        }
+                        catch (Exception publishEx)
+                        {
+                            logger.LogError(publishEx, "Failed to publish CompanyCreated event to Dapr for company: {Name}. PubSub: rabbitmq-pubsub, Topic: companycreated", companyDto.Name);
+                            // Don't fail the entire operation if event publishing fails
+                            // You can decide if you want to return an error or just log it
+                        }
+
                         return Result.Ok();
                     }
                     catch (Exception ex)
@@ -87,6 +115,7 @@ namespace Application
                         persistenceActivity?.SetStatus(ActivityStatusCode.Error, ex.Message);
                         activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
                         companyMetrics.RecordOperationError("create");
+                        logger.LogError(ex, "Error creating company: {Message}", ex.Message);
                         return Result.Fail($"Error creating company: {ex.Message}");
                     }
                 }

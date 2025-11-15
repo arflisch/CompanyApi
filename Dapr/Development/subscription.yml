@@ -1,0 +1,11 @@
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: company
+spec:
+  topic: companycreated
+  routes:
+    default: /events
+  pubsubname: rabbitmq-pubsub
+scopes:
+- company-api

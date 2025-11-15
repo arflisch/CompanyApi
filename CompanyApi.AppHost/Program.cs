@@ -1,15 +1,22 @@
 using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
-
-// Ensure you have the correct namespace or library that provides the 'AddPostgres' extension method.
-// If 'AddPostgres' is part of an external library, ensure the library is installed and the namespace is included.
+using CommunityToolkit.Aspire.Hosting.Dapr;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-
-
 // Add your API project and wire up the connection string from the Postgres resource
-builder.AddProject<Projects.CompanyApi>("companyapi")
+var companyApi = builder.AddProject<Projects.CompanyApi>("companyapi")
     .WithEnvironment("ConnectionStrings__DefaultConnection", "Host=localhost;Port=5433;Database=company_db;Username=cae_user;Password=cae");
+
+companyApi
+    .WithDaprSidecar(new DaprSidecarOptions
+    {
+        AppId = "company-api",
+        AppPort = 7223,
+        
+        ResourcesPaths = ["../Dapr/Development"],
+        LogLevel = "debug",
+        AppProtocol = "https"
+    });
 
 builder.Build().Run();

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.11.35303.130
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11201.2
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompanyApi", "CompanyApi\CompanyApi.csproj", "{5FF3C0CD-05B2-45D7-990D-6985097151D5}"
 EndProject
@@ -14,6 +14,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompanyApi.AppHost", "CompanyApi.AppHost\CompanyApi.AppHost.csproj", "{DA8386CD-5691-4B1C-AD09-1A7360355381}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompanyApi.ServiceDefaults", "CompanyApi.ServiceDefaults\CompanyApi.ServiceDefaults.csproj", "{6D4169E1-C98D-1973-7901-2620B21ED233}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dapr", "Dapr", "{121C4FAA-E575-41A7-A835-D52F65FB4437}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Development", "Development", "{7C049F85-5AA5-476B-92D9-0DBC06189520}"
+	ProjectSection(SolutionItems) = preProject
+		Dapr\Development\RabbitMQ.yml = Dapr\Development\RabbitMQ.yml
+		subscription.yml = subscription.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +56,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7C049F85-5AA5-476B-92D9-0DBC06189520} = {121C4FAA-E575-41A7-A835-D52F65FB4437}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5EA79C33-DA73-4F6F-BCA6-06CDCE92CC2A}
