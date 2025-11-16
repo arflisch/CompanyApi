@@ -13,7 +13,9 @@
     <File Path="BE/Dapr/Development/RabbitMQ.yml" />
     <File Path="BE/Dapr/Development/subscription.yml" />
   </Folder>
-<Folder Name="/FE/" />
+<Folder Name="/FE/">
+<Project Path="FE/CompanyFrontend/CompanyFrontend.csproj" Id="5a2a366e-926f-49c6-9e9a-ca573c2c0e56" />
+</Folder>
 <Project Path="CompanyApi.AppHost/CompanyApi.AppHost.csproj" />
 
 </Solution>
