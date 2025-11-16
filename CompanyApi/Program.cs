@@ -1,12 +1,10 @@
-using Application;
 using Database;
 using Domain;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using Serilog.Events;
-using Dapr.Client;
+using Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
