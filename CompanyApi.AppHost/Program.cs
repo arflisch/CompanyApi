@@ -12,9 +12,8 @@ companyApi
     .WithDaprSidecar(new DaprSidecarOptions
     {
         AppId = "company-api",
-        AppPort = 7223,
-        
-        ResourcesPaths = ["../Dapr/Development"],
+        AppPort = 7223,    
+        ResourcesPaths = ["../BE/Dapr/Development"],
         LogLevel = "debug",
         AppProtocol = "https"
     });
