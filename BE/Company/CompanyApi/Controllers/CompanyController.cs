@@ -8,6 +8,7 @@ namespace CompanyApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [ApiExplorerSettings(GroupName = "facade")]
     public class CompanyController : Controller
     {
         private readonly ILogger<CompanyController> _logger;

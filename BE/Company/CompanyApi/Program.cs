@@ -1,10 +1,11 @@
+using Application;
 using Database;
 using Domain;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Google.Api;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +31,6 @@ builder.Services.AddTransient<IGetCompaniesCommand, GetCompaniesCommand>();
 builder.Services.AddSingleton<Application.Metrics.CompanyMetrics>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CompanyDtoValidator>();
 
@@ -43,6 +43,16 @@ builder.Services.AddDbContext<dbContext>(options =>
 // Register the repository
 builder.Services.AddScoped<ICompanyRepository<Company>, CompanyRepository>();
 
+builder.Services.AddOpenApiDocument(option =>
+{
+    option.DocumentName = "facade";
+    option.ApiGroupNames = ["facade"];
+    option.PostProcess = postProcess =>
+    {
+        postProcess.Info.Title = "Facade contracts are only used by Guis and no perinity is provided.";
+    };
+});
+
 
 var app = builder.Build();
 
@@ -54,8 +64,17 @@ try
 
     if (app.Environment.IsDevelopment())
     {
-        app.UseSwagger();
-        app.UseSwaggerUI();
+        app.UseOpenApi(configure =>
+        {
+            configure.DocumentName = "facade";
+        })
+        .UseSwaggerUi(configure =>
+        {
+            configure.Path = "/swagger/facade";
+            configure.DocumentPath = configure.Path + "/swagger.json";
+            configure.TagsSorter = "alpha";
+            configure.OperationsSorter = "alpha";
+        });
     }
     app.UseCloudEvents();
 
@@ -64,6 +83,8 @@ try
     app.MapControllers();
 
     app.MapSubscribeHandler();
+
+    
 
     app.Run();
 }

@@ -5,6 +5,7 @@
   <Folder Name="/BE/Company/">
   <Project Path="BE/Company/Application/Application.csproj" />
   <Project Path="BE/Company/CompanyApi/CompanyApi.csproj" />
+  <Project Path="BE/Company/CompanySdk/CompanySdk.csproj" Id="4d933ab1-5868-41ac-a14c-9ac42b314a28" />
   <Project Path="BE/Company/Database/Database.csproj" />
   <Project Path="BE/Company/Domain/Domain.csproj" />
   </Folder>
