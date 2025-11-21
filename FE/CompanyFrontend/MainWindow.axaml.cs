@@ -1,5 +1,6 @@
 using Avalonia.Controls;
-using System.Security.Cryptography.X509Certificates;
+using Avalonia.Interactivity;
+using CompanyFrontend.ViewModels;
 
 namespace CompanyFrontend
 {
@@ -8,6 +9,7 @@ namespace CompanyFrontend
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainWindowViewModel();
         }
     }
 }
