@@ -11,6 +11,8 @@ namespace CompanyFrontend.Services
         Task<FileResponse> CreateCompanyAsync(CompanyDto companyDto);
         Task<FileResponse> UpdateCompanyAsync(long id, CompanyDto companyDto);
         Task<FileResponse> DeleteCompanyAsync(long id);
+        Task<FileResponse> PatchCompanyName(long id, string name);
+        Task<FileResponse> PatchCompanyVat(long id, string vat);
     }
 
     public class CompanyService : ICompanyService
@@ -43,6 +45,16 @@ namespace CompanyFrontend.Services
         public async Task<FileResponse> DeleteCompanyAsync(long id)
         {
             return await _companyClient.DeleteCompanyAsync(id);
+        }
+
+        public async Task<FileResponse> PatchCompanyName(long id, string name)
+        {
+            return await _companyClient.PatchCompanyNameAsync(id, name);
+        }
+
+        public async Task<FileResponse> PatchCompanyVat(long id, string vat)
+        {
+            return await _companyClient.PatchCompanyVatAsync(id, vat);
         }
     }
 }

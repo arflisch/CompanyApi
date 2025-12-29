@@ -8,7 +8,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 var companyApi = builder.AddProject<Projects.CompanyApi>("companyapi")
     .WithEnvironment("ConnectionStrings__DefaultConnection", "Host=localhost;Port=5433;Database=company_db;Username=cae_user;Password=cae");
 
-var companyFrontend = builder.AddProject<Projects.CompanyFrontend>("companyfrontend");
+//var companyFrontend = builder.AddProject<Projects.CompanyFrontend>("companyfrontend");
 
 companyApi
     .WithDaprSidecar(new DaprSidecarOptions

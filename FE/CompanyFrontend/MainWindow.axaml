@@ -3,26 +3,24 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewmodels="using:CompanyFrontend.ViewModels"
+        xmlns:views="using:CompanyFrontend.Views"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="CompanyFrontend.MainWindow"
         x:DataType="viewmodels:MainWindowViewModel"
         Title="CompanyFrontend">
-    <DockPanel>
-	    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10">
-			<Button Content="Load companies" Command="{Binding LoadCompaniesCommand}"/>
-        </StackPanel>
-        <DataGrid ItemsSource="{Binding Companies}"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  GridLinesVisibility="All"
-                  BorderThickness="1"
-                  Background="#343434"
-                  Margin="10">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="Auto"/>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
-                    <DataGridTextColumn Header="Vat" Binding="{Binding Vat}" Width="*"/>
-                </DataGrid.Columns>
-            </DataGrid>
-    </DockPanel>
+    
+    <!-- ContentControl pour la navigation entre vues -->
+    <ContentControl Content="{Binding CurrentView}">
+        <ContentControl.DataTemplates>
+            <!-- Template pour afficher CompanyListView quand CurrentView = MainWindowViewModel -->
+            <DataTemplate DataType="viewmodels:MainWindowViewModel">
+                <views:CompanyListView/>
+            </DataTemplate>
+            
+            <!-- Template pour afficher EditCompanyView quand CurrentView = EditCompanyViewModel -->
+            <DataTemplate DataType="viewmodels:EditCompanyViewModel">
+                <views:EditCompanyView/>
+            </DataTemplate>
+        </ContentControl.DataTemplates>
+    </ContentControl>
 </Window>
