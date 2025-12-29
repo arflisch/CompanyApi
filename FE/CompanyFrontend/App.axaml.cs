@@ -2,8 +2,10 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using CompanyFrontend.ViewModels;
+using CompanyFrontend.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Net.Http;
 
 namespace CompanyFrontend
 {
@@ -18,26 +20,37 @@ namespace CompanyFrontend
 
         public override void OnFrameworkInitializationCompleted()
         {
-            var services = new ServiceCollection();
-            ConfigureServices(services);
-            Services = services.BuildServiceProvider();
+            Services = ConfigureServices();
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = new MainWindow();
+                var mainWindow = Services.GetRequiredService<MainWindow>();
+                desktop.MainWindow = mainWindow;
             }
 
             base.OnFrameworkInitializationCompleted();
         }
 
-        private void ConfigureServices(IServiceCollection services)
+        private static IServiceProvider ConfigureServices()
         {
-            // Register your services here
-            //services.AddSingleton<MainWindow>();
-            //services.AddSingleton<MainWindowViewModel>();
+            var services = new ServiceCollection();
 
-            // Add other services, repositories, HTTP clients, etc.
-            // services.AddHttpClient<ICompanyService, CompanyService>();
+            // Configure HttpClient with SSL validation bypass for development
+            services.AddHttpClient<ICompanyService, CompanyService>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:7223");
+                client.Timeout = TimeSpan.FromSeconds(30);
+            })
+            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+            });
+
+            // Register ViewModels and Views
+            services.AddTransient<MainWindowViewModel>();
+            services.AddSingleton<MainWindow>();
+
+            return services.BuildServiceProvider();
         }
     }
 }
