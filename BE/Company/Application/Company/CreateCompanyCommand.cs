@@ -8,6 +8,7 @@ using Application.Metrics;
 using Dapr;
 using Dapr.Client;
 using Microsoft.Extensions.Logging;
+using Application.Services;
 
 namespace Application
 {
@@ -20,19 +21,22 @@ namespace Application
         private readonly CompanyMetrics companyMetrics;
         private readonly DaprClient daprClient;
         private readonly ILogger<CreateCompanyCommand> logger;
+        private readonly IDaprCacheService daprCacheService;
 
         public CreateCompanyCommand(
             ICompanyRepository<Company> repository, 
             IValidator<CreateCompanyDto> validator, 
             CompanyMetrics companyMetrics, 
             DaprClient daprClient,
-            ILogger<CreateCompanyCommand> logger)
+            ILogger<CreateCompanyCommand> logger,
+            IDaprCacheService daprCacheService)
         {
             this.repository = repository;
             this.validator = validator;
             this.companyMetrics = companyMetrics;
             this.daprClient = daprClient;
             this.logger = logger;
+            this.daprCacheService = daprCacheService;
         }
 
         public async Task<Result<CompanyDto>> CreateCompanyAsync(CreateCompanyDto companyDto)
@@ -105,6 +109,10 @@ namespace Application
                         {
                             logger.LogError(publishEx, "Failed to publish CompanyCreated event to Dapr for company: {Name}. PubSub: rabbitmq-pubsub, Topic: companycreated", companyDto.Name);
                         }
+
+                        // Invalidate Dapr cache after creating company
+                        await daprCacheService.InvalidateAllCompaniesAsync();
+                        logger.LogInformation("Invalidated companies cache (via Dapr) after creating company: {Name}", companyDto.Name);
 
                         // Retourner le CompanyDto avec l'ID généré
                         var createdCompanyDto = new CompanyDto

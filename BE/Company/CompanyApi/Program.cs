@@ -1,14 +1,13 @@
 using Application;
+using Application.Services;
 using Database;
 using Domain;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Google.Api;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
@@ -16,11 +15,9 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog(Log.Logger);
 
-
 builder.AddServiceDefaults();
 
 // Add services to the container.
-
 builder.Services.AddControllers().AddDapr();
 builder.Services.AddDaprClient();
 builder.Services.AddTransient<ICreateCompanyCommand, CreateCompanyCommand>();
@@ -28,7 +25,12 @@ builder.Services.AddTransient<IUpdateCompanyCommand, UpdateCompanyCommand>();
 builder.Services.AddTransient<IDeleteCompanyCommand, DeleteCompanyCommand>();
 builder.Services.AddTransient<IPatchCompanyCommand, PatchCompanyCommand>();
 builder.Services.AddTransient<IGetCompaniesCommand, GetCompaniesCommand>();
+builder.Services.AddTransient<IGetCompanyByIdCommand, GetCompanyByIdCommand>();
 builder.Services.AddSingleton<Application.Metrics.CompanyMetrics>();
+
+// Register Dapr cache service
+builder.Services.AddSingleton<IDaprCacheService, DaprCacheService>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddFluentValidationAutoValidation();

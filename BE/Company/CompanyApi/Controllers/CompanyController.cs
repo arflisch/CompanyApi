@@ -25,6 +25,32 @@ namespace CompanyApi.Controllers
             return await getCompaniesCommand.GetAllCompaniesAsync();
         }
 
+        [HttpGet("{id:long}")]
+        [ProducesResponseType(typeof(CompanyDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetCompanyById(
+            long id, 
+            [FromServices] IGetCompanyByIdCommand getCompanyByIdCommand)
+        {
+            _logger.LogInformation("Retrieving company with Id: {CompanyId}", id);
+
+            var company = await getCompanyByIdCommand.GetCompanyByIdAsync(id);
+            
+            if (company == null)
+            {
+                _logger.LogWarning("Company with Id: {CompanyId} not found", id);
+                return NotFound(new ProblemDetails
+                {
+                    Title = "Company not found",
+                    Status = StatusCodes.Status404NotFound,
+                    Detail = $"Company with ID {id} does not exist"
+                });
+            }
+
+            _logger.LogInformation("Company with Id: {CompanyId} retrieved successfully", id);
+            return Ok(company);
+        }
+
         [ProducesResponseType(typeof(CompanyDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost]
