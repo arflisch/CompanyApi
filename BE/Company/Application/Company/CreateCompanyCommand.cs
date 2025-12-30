@@ -16,14 +16,14 @@ namespace Application
         private static readonly ActivitySource ActivitySource = new("CompanyApi.Application");
         
         private readonly ICompanyRepository<Company> repository;
-        private readonly IValidator<CompanyDto> validator;
+        private readonly IValidator<CreateCompanyDto> validator;
         private readonly CompanyMetrics companyMetrics;
         private readonly DaprClient daprClient;
         private readonly ILogger<CreateCompanyCommand> logger;
 
         public CreateCompanyCommand(
             ICompanyRepository<Company> repository, 
-            IValidator<CompanyDto> validator, 
+            IValidator<CreateCompanyDto> validator, 
             CompanyMetrics companyMetrics, 
             DaprClient daprClient,
             ILogger<CreateCompanyCommand> logger)
@@ -35,7 +35,7 @@ namespace Application
             this.logger = logger;
         }
 
-        public async Task<Result> CreateCompanyAsync(CompanyDto companyDto)
+        public async Task<Result<CompanyDto>> CreateCompanyAsync(CreateCompanyDto companyDto)
         {
             using var activity = ActivitySource.StartActivity("CreateCompany");
             var stopwatch = Stopwatch.StartNew();
@@ -104,11 +104,17 @@ namespace Application
                         catch (Exception publishEx)
                         {
                             logger.LogError(publishEx, "Failed to publish CompanyCreated event to Dapr for company: {Name}. PubSub: rabbitmq-pubsub, Topic: companycreated", companyDto.Name);
-                            // Don't fail the entire operation if event publishing fails
-                            // You can decide if you want to return an error or just log it
                         }
 
-                        return Result.Ok();
+                        // Retourner le CompanyDto avec l'ID généré
+                        var createdCompanyDto = new CompanyDto
+                        {
+                            Id = company.Id,
+                            Name = company.Name,
+                            Vat = company.Vat
+                        };
+
+                        return Result.Ok(createdCompanyDto);
                     }
                     catch (Exception ex)
                     {

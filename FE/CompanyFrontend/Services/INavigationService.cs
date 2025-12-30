@@ -7,7 +7,7 @@ namespace CompanyFrontend.Services
         object CurrentView { get; }
         
         void NavigateToList();
-        void NavigateToEdit(Company company);
+        void NavigateToEdit(CompanyDto company);
         void NavigateToCreate();
     }
 }

@@ -10,7 +10,7 @@ namespace CompanyFrontend.ViewModels
     public partial class CreateCompanyViewModel : ObservableObject
     {
         private readonly ICompanyService _companyService;
-        private readonly Action _onCreated;
+        private readonly Action<CompanyDto> _onCreated;
         private readonly Action _onCancelled;
 
         [ObservableProperty]
@@ -25,7 +25,7 @@ namespace CompanyFrontend.ViewModels
         [ObservableProperty]
         private bool isSaving;
 
-        public CreateCompanyViewModel(ICompanyService companyService, Action onCreated, Action onCancelled)
+        public CreateCompanyViewModel(ICompanyService companyService, Action<CompanyDto> onCreated, Action onCancelled)
         {
             _companyService = companyService;
             _onCreated = onCreated;
@@ -52,7 +52,7 @@ namespace CompanyFrontend.ViewModels
                     return;
                 }
 
-                var companyDto = new CompanyDto
+                var companyDto = new CreateCompanyDto
                 {
                     Name = Name,
                     Vat = Vat,
@@ -60,12 +60,12 @@ namespace CompanyFrontend.ViewModels
 
                 System.Diagnostics.Debug.WriteLine($"💾 Creating company: Name={Name}, Vat={Vat}");
                 
-                await _companyService.CreateCompanyAsync(companyDto);
+                var createdCompany = await _companyService.CreateCompanyAsync(companyDto);
 
                 System.Diagnostics.Debug.WriteLine("✅ Company created successfully");
 
                 // Appeler le callback sans paramètre
-                _onCreated?.Invoke();
+                _onCreated?.Invoke(createdCompany);
             }
             catch (Exception ex)
             {

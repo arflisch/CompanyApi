@@ -30,18 +30,18 @@ namespace CompanyApi.Facade.Sdk
     public partial interface ICompanyClient
     {
         /// <exception cref="RestException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.List<Company>> GetAllCompaniesAsync();
+        System.Threading.Tasks.Task<System.Collections.Generic.List<CompanyDto>> GetAllCompaniesAsync();
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="RestException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.List<Company>> GetAllCompaniesAsync(System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<System.Collections.Generic.List<CompanyDto>> GetAllCompaniesAsync(System.Threading.CancellationToken cancellationToken);
 
         /// <exception cref="RestException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task CreateCompanyAsync(CompanyDto companydto);
+        System.Threading.Tasks.Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto createCompanydto);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="RestException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task CreateCompanyAsync(CompanyDto companydto, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto createCompanydto, System.Threading.CancellationToken cancellationToken);
 
         /// <exception cref="RestException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<FileResponse> DeleteCompanyAsync(long id);
@@ -51,11 +51,11 @@ namespace CompanyApi.Facade.Sdk
         System.Threading.Tasks.Task<FileResponse> DeleteCompanyAsync(long id, System.Threading.CancellationToken cancellationToken);
 
         /// <exception cref="RestException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<FileResponse> UpdateCompanyAsync(long id, CompanyDto companydto);
+        System.Threading.Tasks.Task<FileResponse> UpdateCompanyAsync(long id, CreateCompanyDto companydto);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="RestException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<FileResponse> UpdateCompanyAsync(long id, CompanyDto companydto, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<FileResponse> UpdateCompanyAsync(long id, CreateCompanyDto companydto, System.Threading.CancellationToken cancellationToken);
 
         /// <exception cref="RestException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<FileResponse> PatchCompanyNameAsync(long id, string name);
@@ -122,14 +122,14 @@ namespace CompanyApi.Facade.Sdk
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
 
         /// <exception cref="RestException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.List<Company>> GetAllCompaniesAsync()
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.List<CompanyDto>> GetAllCompaniesAsync()
         {
             return GetAllCompaniesAsync(System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="RestException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.List<Company>> GetAllCompaniesAsync(System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.List<CompanyDto>> GetAllCompaniesAsync(System.Threading.CancellationToken cancellationToken)
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -170,7 +170,7 @@ namespace CompanyApi.Facade.Sdk
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.List<Company>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.List<CompanyDto>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new RestException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -198,17 +198,17 @@ namespace CompanyApi.Facade.Sdk
         }
 
         /// <exception cref="RestException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task CreateCompanyAsync(CompanyDto companydto)
+        public virtual System.Threading.Tasks.Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto createCompanydto)
         {
-            return CreateCompanyAsync(companydto, System.Threading.CancellationToken.None);
+            return CreateCompanyAsync(createCompanydto, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="RestException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task CreateCompanyAsync(CompanyDto companydto, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto createCompanydto, System.Threading.CancellationToken cancellationToken)
         {
-            if (companydto == null)
-                throw new System.ArgumentNullException("companydto");
+            if (createCompanydto == null)
+                throw new System.ArgumentNullException("createCompanydto");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -216,11 +216,12 @@ namespace CompanyApi.Facade.Sdk
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(companydto, JsonSerializerSettings);
+                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(createCompanydto, JsonSerializerSettings);
                     var content_ = new System.Net.Http.StringContent(json_);
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                     if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
@@ -252,7 +253,22 @@ namespace CompanyApi.Facade.Sdk
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 201)
                         {
-                            return;
+                            var objectResponse_ = await ReadObjectResponseAsync<CompanyDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new RestException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        if (status_ == 400)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new RestException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new RestException<ProblemDetails>("A server side error occurred.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
@@ -353,14 +369,14 @@ namespace CompanyApi.Facade.Sdk
         }
 
         /// <exception cref="RestException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<FileResponse> UpdateCompanyAsync(long id, CompanyDto companydto)
+        public virtual System.Threading.Tasks.Task<FileResponse> UpdateCompanyAsync(long id, CreateCompanyDto companydto)
         {
             return UpdateCompanyAsync(id, companydto, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="RestException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<FileResponse> UpdateCompanyAsync(long id, CompanyDto companydto, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<FileResponse> UpdateCompanyAsync(long id, CreateCompanyDto companydto, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -738,7 +754,7 @@ namespace CompanyApi.Facade.Sdk
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.2.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial record Company
+    public partial record CompanyDto
     {
 
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -753,7 +769,37 @@ namespace CompanyApi.Facade.Sdk
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.2.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial record CompanyDto
+    public partial record ProblemDetails
+    {
+
+        [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? Type { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? Title { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? Status { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("detail", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? Detail { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("instance", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? Instance { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.2.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial record CreateCompanyDto
     {
 
         [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]

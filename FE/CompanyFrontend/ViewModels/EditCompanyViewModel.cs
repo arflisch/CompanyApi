@@ -10,7 +10,7 @@ namespace CompanyFrontend.ViewModels
     public partial class EditCompanyViewModel : ObservableObject
     {
         private readonly ICompanyService _companyService;
-        private readonly Action<Company> _onSaved;
+        private readonly Action<CompanyDto> _onSaved;
         private readonly Action _onCancelled;
 
         [ObservableProperty]
@@ -28,7 +28,7 @@ namespace CompanyFrontend.ViewModels
         [ObservableProperty]
         private bool isSaving;
 
-        public EditCompanyViewModel(ICompanyService companyService, Company company, Action<Company> onSaved, Action onCancelled)
+        public EditCompanyViewModel(ICompanyService companyService, CompanyDto company, Action<CompanyDto> onSaved, Action onCancelled)
         {
             _companyService = companyService;
             _onSaved = onSaved;
@@ -54,7 +54,7 @@ namespace CompanyFrontend.ViewModels
                 
                 if (nameChanged && vatChanged)
                 {
-                    var companyDto = new CompanyDto
+                    var companyDto = new CreateCompanyDto
                     {
                         Name = Name,
                         Vat = Vat
@@ -73,7 +73,7 @@ namespace CompanyFrontend.ViewModels
                 System.Diagnostics.Debug.WriteLine($"✅ Company {CompanyId} updated successfully");
 
                 // Créer l'objet Company mis à jour
-                var updatedCompany = new Company
+                var updatedCompany = new CompanyDto
                 {
                     Id = CompanyId,
                     Name = Name,

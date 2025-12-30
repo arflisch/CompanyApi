@@ -1,5 +1,6 @@
 ﻿using Database;
 using Domain;
+using Domain.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,20 @@ namespace Application
             this.repository = repository;
         }
 
-        public async Task<List<Company>> GetAllCompaniesAsync()
+        public async Task<List<CompanyDto>> GetAllCompaniesAsync()
         {
-            return await repository.getAllCompaniesAsync();
+            var allCompanies = await repository.getAllCompaniesAsync();
+            List<CompanyDto> companyDtos = new List<CompanyDto>();
+            foreach (var item in allCompanies)
+            {
+                companyDtos.Add(new CompanyDto 
+                { 
+                    Id = item.Id, 
+                    Name = item.Name, 
+                    Vat = item.Vat 
+                });
+            }
+            return companyDtos;
         }
     }
 }

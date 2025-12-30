@@ -17,17 +17,17 @@ namespace CompanyFrontend.Services
             };
         }
 
-        public async Task<List<Company>> GetAllCompaniesAsync()
+        public async Task<List<CompanyDto>> GetAllCompaniesAsync()
         {
             return await _companyClient.GetAllCompaniesAsync();
         }
 
-        public async Task CreateCompanyAsync(CompanyDto companyDto)
+        public async Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto companyDto)
         {
-            await _companyClient.CreateCompanyAsync(companyDto);
+            return await _companyClient.CreateCompanyAsync(companyDto);
         }
 
-        public async Task<FileResponse> UpdateCompanyAsync(long id, CompanyDto companyDto)
+        public async Task<FileResponse> UpdateCompanyAsync(long id, CreateCompanyDto companyDto)
         {
             return await _companyClient.UpdateCompanyAsync(id, companyDto);
         }

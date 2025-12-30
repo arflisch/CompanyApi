@@ -17,17 +17,17 @@ namespace Application
     {
         private static readonly ActivitySource ActivitySource = new("CompanyApi.Application");
         private readonly ICompanyRepository<Company> repository;
-        private readonly IValidator<CompanyDto> validator;
+        private readonly IValidator<CreateCompanyDto> validator;
         private readonly CompanyMetrics companyMetrics;
 
-        public UpdateCompanyCommand(ICompanyRepository<Company> repository, IValidator<CompanyDto> validator, CompanyMetrics companyMetrics)
+        public UpdateCompanyCommand(ICompanyRepository<Company> repository, IValidator<CreateCompanyDto> validator, CompanyMetrics companyMetrics)
         {
             this.repository = repository;
             this.validator = validator;
             this.companyMetrics = companyMetrics;
         }
 
-        public async Task<Result> UpdateCompanyAsync(long id, CompanyDto companyDto)
+        public async Task<Result> UpdateCompanyAsync(long id, CreateCompanyDto companyDto)
         {
             using var activity = ActivitySource.StartActivity("UpdateCompanyCommand.UpdateCompanyAsync");
 

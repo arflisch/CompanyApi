@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Domain.DTO
 {
-    public class CompanyDto
+    public class CreateCompanyDto
     {
-        public long Id { get; set; }
         public string Name { get; set; }
-        public string Vat {  get; set; }
+        public string Vat { get; set; }
     }
 }

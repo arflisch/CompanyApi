@@ -10,6 +10,6 @@ namespace Application
 {
     public interface ICreateCompanyCommand
     {
-       Task<Result> CreateCompanyAsync(CompanyDto companyDto);
+       Task<Result<CompanyDto>> CreateCompanyAsync(CreateCompanyDto companyDto);
     }
 }

@@ -19,23 +19,25 @@ namespace CompanyApi.Controllers
         }
 
         [HttpGet]
-        public async Task<List<Company>> GetAllCompanies([FromServices] IGetCompaniesCommand getCompaniesCommand) 
+        public async Task<List<CompanyDto>> GetAllCompanies([FromServices] IGetCompaniesCommand getCompaniesCommand) 
         {
             _logger.LogInformation("Retrieving all companies");
             return await getCompaniesCommand.GetAllCompaniesAsync();
         }
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [HttpPost]
-        public async Task<IActionResult> CreateCompany([FromBody] CompanyDto companydto, [FromServices] ICreateCompanyCommand createCompanyCommand)
-        {
-            _logger.LogInformation("Creating a new company with Name: {CompanyName} and Vat: {CompanyVat}", companydto.Name, companydto.Vat);
 
-            var result = await createCompanyCommand.CreateCompanyAsync(companydto);
+        [ProducesResponseType(typeof(CompanyDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpPost]
+        public async Task<IActionResult> CreateCompany([FromBody] CreateCompanyDto createCompanydto, [FromServices] ICreateCompanyCommand createCompanyCommand)
+        {
+            _logger.LogInformation("Creating a new company with Name: {CompanyName} and Vat: {CompanyVat}", createCompanydto.Name, createCompanydto.Vat);
+
+            var result = await createCompanyCommand.CreateCompanyAsync(createCompanydto);
             if (result.IsSuccess)
             {
                 _logger.LogInformation("Company created successfully");
-                // Fix: Use the correct syntax for CreatedAtAction
-                return CreatedAtAction(nameof(CreateCompany), result);
+
+                return StatusCode(StatusCodes.Status201Created, result.Value);
             }
 
             if (result.Errors.Any(e => e is ValidationError))
@@ -50,8 +52,7 @@ namespace CompanyApi.Controllers
                 var validationProblemDetails = new ValidationProblemDetails
                 {
                     Title = "Validation Errors",
-                    Status = StatusCodes.Status400BadRequest, // Fix: Replace StatusCode.Status400BadRequest with the correct status code value
-                    
+                    Status = StatusCodes.Status400BadRequest,
                 };
                 validationProblemDetails.Errors.Add("ValidationErrors", errors);
 
@@ -109,7 +110,7 @@ namespace CompanyApi.Controllers
         }
 
         [HttpPut("{id:long}")]
-        public async Task<IActionResult> UpdateCompany(long id, [FromBody] CompanyDto companydto, [FromServices] IUpdateCompanyCommand updateCompanyCommand)
+        public async Task<IActionResult> UpdateCompany(long id, [FromBody] CreateCompanyDto companydto, [FromServices] IUpdateCompanyCommand updateCompanyCommand)
         {
             _logger.LogInformation("Updating company with Id: {CompanyId}", id);
 

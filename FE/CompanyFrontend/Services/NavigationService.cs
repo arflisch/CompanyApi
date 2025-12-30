@@ -40,7 +40,7 @@ namespace CompanyFrontend.Services
             CurrentView = MainWindowViewModel;
         }
 
-        public void NavigateToEdit(Company company)
+        public void NavigateToEdit(CompanyDto company)
         {
             if (company == null)
             {

@@ -6,7 +6,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Company = CompanyApi.Facade.Sdk.Company;
 
 namespace CompanyFrontend.ViewModels
 {
@@ -19,7 +18,7 @@ namespace CompanyFrontend.ViewModels
         private string welcomeMessage = "Welcome";
 
         [ObservableProperty]
-        private ObservableCollection<Company> companies = [];
+        private ObservableCollection<CompanyDto> companies = [];
 
         [ObservableProperty]
         private bool isLoading;
@@ -63,7 +62,7 @@ namespace CompanyFrontend.ViewModels
         }
 
         [RelayCommand]
-        private void EditCompany(Company company)
+        private void EditCompany(CompanyDto company)
         {
             _navigationService.NavigateToEdit(company);
         }
@@ -74,7 +73,7 @@ namespace CompanyFrontend.ViewModels
             _navigationService.NavigateToCreate();
         }
 
-        public void OnCompanySaved(Company updatedCompany)
+        public void OnCompanySaved(CompanyDto updatedCompany)
         {
             System.Diagnostics.Debug.WriteLine($"🔄 Updating company {updatedCompany.Id} in the list");
 
@@ -96,13 +95,9 @@ namespace CompanyFrontend.ViewModels
             _navigationService.NavigateToList();
         }
 
-        public void OnCompanyCreated()
+        public void OnCompanyCreated(CompanyDto createdCompany)
         {
-            System.Diagnostics.Debug.WriteLine("➕ Reloading company list after creation");
-            
-            // Recharger la liste complète pour obtenir la nouvelle company avec son ID
-            _ = LoadCompanies();
-            
+            Companies.Add(createdCompany);
             _navigationService.NavigateToList();
         }
     }

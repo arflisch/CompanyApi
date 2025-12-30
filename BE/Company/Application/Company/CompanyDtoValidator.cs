@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application
 {
-    public class CompanyDtoValidator : AbstractValidator<CompanyDto>
+    public class CompanyDtoValidator : AbstractValidator<CreateCompanyDto>
     {
         public CompanyDtoValidator()
         {
