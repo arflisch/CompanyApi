@@ -1,5 +1,4 @@
-﻿using Avalonia.Controls.ApplicationLifetimes;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CompanyApi.Facade.Sdk;
 using CompanyFrontend.Services;
@@ -14,6 +13,7 @@ namespace CompanyFrontend.ViewModels
     public partial class MainWindowViewModel : ObservableObject
     {
         private readonly ICompanyService _companyService;
+        private readonly INavigationService _navigationService;
 
         [ObservableProperty]
         private string welcomeMessage = "Welcome";
@@ -24,15 +24,10 @@ namespace CompanyFrontend.ViewModels
         [ObservableProperty]
         private bool isLoading;
 
-        [ObservableProperty]
-        private object? currentView;
-
-        public MainWindowViewModel(ICompanyService companyService)
+        public MainWindowViewModel(ICompanyService companyService, INavigationService navigationService)
         {
             _companyService = companyService;
-            
-            // Afficher la liste au démarrage
-            CurrentView = this;
+            _navigationService = navigationService;
         }
 
         [RelayCommand]
@@ -70,38 +65,24 @@ namespace CompanyFrontend.ViewModels
         [RelayCommand]
         private void EditCompany(Company company)
         {
-            if (company == null)
-            {
-                System.Diagnostics.Debug.WriteLine("❌ Company is null");
-                return;
-            }
-
-            System.Diagnostics.Debug.WriteLine($"✏️ Navigating to edit view for: {company.Name} (ID: {company.Id})");
-
-            // Créer le ViewModel pour l'édition avec callbacks
-            var editViewModel = new EditCompanyViewModel(
-                _companyService,
-                company,
-                OnCompanySaved,      // Callback quand sauvegardé
-                NavigateBackToList   // Callback quand annulé
-            );
-
-            // Naviguer vers la vue d'édition
-            CurrentView = editViewModel;
+            _navigationService.NavigateToEdit(company);
         }
 
-        private void OnCompanySaved(Company updatedCompany)
+        [RelayCommand]
+        private void CreateCompany()
+        {
+            _navigationService.NavigateToCreate();
+        }
+
+        public void OnCompanySaved(Company updatedCompany)
         {
             System.Diagnostics.Debug.WriteLine($"🔄 Updating company {updatedCompany.Id} in the list");
 
-            // Trouver l'index de la company dans la collection
             var existingCompany = Companies.FirstOrDefault(c => c.Id == updatedCompany.Id);
             
             if (existingCompany != null)
             {
                 var index = Companies.IndexOf(existingCompany);
-                
-                // Remplacer l'élément à cet index
                 Companies[index] = updatedCompany;
                 
                 System.Diagnostics.Debug.WriteLine($"✅ Company {updatedCompany.Id} updated in collection at index {index}");
@@ -112,16 +93,17 @@ namespace CompanyFrontend.ViewModels
                 Companies.Add(updatedCompany);
             }
 
-            // Revenir à la liste
-            NavigateBackToList();
+            _navigationService.NavigateToList();
         }
 
-        private void NavigateBackToList()
+        public void OnCompanyCreated()
         {
-            System.Diagnostics.Debug.WriteLine("🔙 Navigating back to company list");
+            System.Diagnostics.Debug.WriteLine("➕ Reloading company list after creation");
             
-            // Revenir à la vue de la liste
-            CurrentView = this;
+            // Recharger la liste complète pour obtenir la nouvelle company avec son ID
+            _ = LoadCompanies();
+            
+            _navigationService.NavigateToList();
         }
     }
 }

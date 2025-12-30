@@ -4,9 +4,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewmodels="using:CompanyFrontend.ViewModels"
         xmlns:views="using:CompanyFrontend.Views"
+        xmlns:services="using:CompanyFrontend.Services"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="CompanyFrontend.MainWindow"
-        x:DataType="viewmodels:MainWindowViewModel"
+        x:DataType="services:INavigationService"
         Title="CompanyFrontend">
     
     <!-- ContentControl pour la navigation entre vues -->
@@ -20,6 +21,10 @@
             <!-- Template pour afficher EditCompanyView quand CurrentView = EditCompanyViewModel -->
             <DataTemplate DataType="viewmodels:EditCompanyViewModel">
                 <views:EditCompanyView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="viewmodels:CreateCompanyViewModel">
+                <views:CreateCompanyView/>
             </DataTemplate>
         </ContentControl.DataTemplates>
     </ContentControl>

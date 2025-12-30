@@ -5,16 +5,6 @@ using System.Threading.Tasks;
 
 namespace CompanyFrontend.Services
 {
-    public interface ICompanyService
-    {
-        Task<List<Company>> GetAllCompaniesAsync();
-        Task<FileResponse> CreateCompanyAsync(CompanyDto companyDto);
-        Task<FileResponse> UpdateCompanyAsync(long id, CompanyDto companyDto);
-        Task<FileResponse> DeleteCompanyAsync(long id);
-        Task<FileResponse> PatchCompanyName(long id, string name);
-        Task<FileResponse> PatchCompanyVat(long id, string vat);
-    }
-
     public class CompanyService : ICompanyService
     {
         private readonly CompanyClient _companyClient;
@@ -32,9 +22,9 @@ namespace CompanyFrontend.Services
             return await _companyClient.GetAllCompaniesAsync();
         }
 
-        public async Task<FileResponse> CreateCompanyAsync(CompanyDto companyDto)
+        public async Task CreateCompanyAsync(CompanyDto companyDto)
         {
-            return await _companyClient.CreateCompanyAsync(companyDto);
+            await _companyClient.CreateCompanyAsync(companyDto);
         }
 
         public async Task<FileResponse> UpdateCompanyAsync(long id, CompanyDto companyDto)

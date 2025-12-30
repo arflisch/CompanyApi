@@ -24,7 +24,7 @@ namespace CompanyApi.Controllers
             _logger.LogInformation("Retrieving all companies");
             return await getCompaniesCommand.GetAllCompaniesAsync();
         }
-
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [HttpPost]
         public async Task<IActionResult> CreateCompany([FromBody] CompanyDto companydto, [FromServices] ICreateCompanyCommand createCompanyCommand)
         {

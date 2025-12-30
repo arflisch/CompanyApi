@@ -12,7 +12,6 @@ namespace CompanyFrontend.ViewModels
         private readonly ICompanyService _companyService;
         private readonly Action<Company> _onSaved;
         private readonly Action _onCancelled;
-        private readonly Company _originalCompany;
 
         [ObservableProperty]
         private long companyId;
@@ -29,14 +28,11 @@ namespace CompanyFrontend.ViewModels
         [ObservableProperty]
         private bool isSaving;
 
-        public bool DialogResult { get; private set; }
-
         public EditCompanyViewModel(ICompanyService companyService, Company company, Action<Company> onSaved, Action onCancelled)
         {
             _companyService = companyService;
             _onSaved = onSaved;
             _onCancelled = onCancelled;
-            _originalCompany = company;
 
             CompanyId = company.Id;
             Name = company.Name ?? string.Empty;
@@ -55,21 +51,8 @@ namespace CompanyFrontend.ViewModels
             {
                 bool nameChanged = !string.IsNullOrWhiteSpace(Name);
                 bool vatChanged = !string.IsNullOrWhiteSpace(Vat);
-
-                // Cas 1 : Seulement le VAT a changé
-                if (!nameChanged && vatChanged)
-                {
-                    System.Diagnostics.Debug.WriteLine($"💾 Patching VAT only for company {CompanyId}: Vat={Vat}");
-                    await _companyService.PatchCompanyVat(CompanyId, Vat);
-                }
-                // Cas 2 : Seulement le Name a changé
-                else if (nameChanged && !vatChanged)
-                {
-                    System.Diagnostics.Debug.WriteLine($"💾 Patching Name only for company {CompanyId}: Name={Name}");
-                    await _companyService.PatchCompanyName(CompanyId, Name);
-                }
-                // Cas 3 : Les deux ont changé
-                else if (nameChanged && vatChanged)
+                
+                if (nameChanged && vatChanged)
                 {
                     var companyDto = new CompanyDto
                     {
@@ -80,7 +63,6 @@ namespace CompanyFrontend.ViewModels
                     System.Diagnostics.Debug.WriteLine($"💾 Updating full company {CompanyId}: Name={Name}, Vat={Vat}");
                     await _companyService.UpdateCompanyAsync(CompanyId, companyDto);
                 }
-                // Cas 4 : Aucun champ rempli
                 else
                 {
                     ErrorMessage = "At least one field (Name or VAT) must be filled";
@@ -97,8 +79,6 @@ namespace CompanyFrontend.ViewModels
                     Name = Name,
                     Vat = Vat
                 };
-
-                DialogResult = true;
                 
                 // Passer la company mise à jour au callback
                 _onSaved?.Invoke(updatedCompany);
@@ -119,7 +99,6 @@ namespace CompanyFrontend.ViewModels
         private void Cancel()
         {
             System.Diagnostics.Debug.WriteLine("ℹ️ Edit cancelled by user");
-            DialogResult = false;
             
             // Appeler le callback d'annulation
             _onCancelled?.Invoke();

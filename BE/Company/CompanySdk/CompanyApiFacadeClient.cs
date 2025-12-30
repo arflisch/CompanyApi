@@ -37,11 +37,11 @@ namespace CompanyApi.Facade.Sdk
         System.Threading.Tasks.Task<System.Collections.Generic.List<Company>> GetAllCompaniesAsync(System.Threading.CancellationToken cancellationToken);
 
         /// <exception cref="RestException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<FileResponse> CreateCompanyAsync(CompanyDto companydto);
+        System.Threading.Tasks.Task CreateCompanyAsync(CompanyDto companydto);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="RestException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<FileResponse> CreateCompanyAsync(CompanyDto companydto, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task CreateCompanyAsync(CompanyDto companydto, System.Threading.CancellationToken cancellationToken);
 
         /// <exception cref="RestException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<FileResponse> DeleteCompanyAsync(long id);
@@ -198,14 +198,14 @@ namespace CompanyApi.Facade.Sdk
         }
 
         /// <exception cref="RestException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<FileResponse> CreateCompanyAsync(CompanyDto companydto)
+        public virtual System.Threading.Tasks.Task CreateCompanyAsync(CompanyDto companydto)
         {
             return CreateCompanyAsync(companydto, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="RestException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<FileResponse> CreateCompanyAsync(CompanyDto companydto, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task CreateCompanyAsync(CompanyDto companydto, System.Threading.CancellationToken cancellationToken)
         {
             if (companydto == null)
                 throw new System.ArgumentNullException("companydto");
@@ -221,7 +221,6 @@ namespace CompanyApi.Facade.Sdk
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/octet-stream"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                     if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
@@ -251,12 +250,9 @@ namespace CompanyApi.Facade.Sdk
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 200 || status_ == 206)
+                        if (status_ == 201)
                         {
-                            var responseStream_ = response_.Content == null ? System.IO.Stream.Null : await ReadAsStreamAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            var fileResponse_ = new FileResponse(status_, headers_, responseStream_, null, response_);
-                            disposeClient_ = false; disposeResponse_ = false; // response and client are disposed by FileResponse
-                            return fileResponse_;
+                            return;
                         }
                         else
                         {

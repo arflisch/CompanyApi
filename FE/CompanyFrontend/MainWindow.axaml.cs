@@ -1,15 +1,14 @@
 using Avalonia.Controls;
-using Avalonia.Interactivity;
-using CompanyFrontend.ViewModels;
+using CompanyFrontend.Services;
 
 namespace CompanyFrontend
 {
     public partial class MainWindow : Window
     {
-        public MainWindow(MainWindowViewModel viewModel)
+        public MainWindow(INavigationService navigationService)
         {
             InitializeComponent();
-            DataContext = viewModel;
+            DataContext = navigationService;
         }
     }
 }

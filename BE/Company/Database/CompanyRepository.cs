@@ -54,7 +54,10 @@ namespace Database
 
         public async Task<List<Company>> getAllCompaniesAsync()
         {
-            return await _dbContext.Companys.AsNoTracking().ToListAsync();
+            return await _dbContext.Companys
+                .AsNoTracking()
+                .OrderBy(c => c.Id)  // Tri par ID pour un ordre cohérent
+                .ToListAsync();
         }
     }
 }

@@ -46,8 +46,17 @@ namespace CompanyFrontend
                 ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
             });
 
-            // Register ViewModels and Views
+            // Register Navigation Service (Singleton car il garde l'état de navigation)
+            services.AddSingleton<INavigationService, NavigationService>();
+
+            // Register ViewModels
             services.AddTransient<MainWindowViewModel>();
+            
+            // Register Lazy<MainWindowViewModel> to break circular dependency
+            services.AddSingleton<Lazy<MainWindowViewModel>>(provider => 
+                new Lazy<MainWindowViewModel>(() => provider.GetRequiredService<MainWindowViewModel>()));
+
+            // Register Views
             services.AddSingleton<MainWindow>();
 
             return services.BuildServiceProvider();

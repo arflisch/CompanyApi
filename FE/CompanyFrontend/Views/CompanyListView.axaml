@@ -10,6 +10,8 @@
     <DockPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10">
             <Button Content="Load companies" Command="{Binding LoadCompaniesCommand}"/>
+            <Button Content="Create a company" 
+                    Command="{ReflectionBinding $parent[UserControl].DataContext.CreateCompanyCommand}"/>
         </StackPanel>
         
         <DataGrid ItemsSource="{Binding Companies}"
