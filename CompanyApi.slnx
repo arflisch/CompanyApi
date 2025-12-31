@@ -3,6 +3,7 @@
 <Project Path="BE/CompanyApi.ServiceDefaults/CompanyApi.ServiceDefaults.csproj" />
 </Folder>
   <Folder Name="/BE/Company/">
+  <Project Path="BE/Company/Application.Test/Application.Test.csproj" Id="baf84f8a-9c0c-4c4d-a69a-16861e763dbc" />
   <Project Path="BE/Company/Application/Application.csproj" />
   <Project Path="BE/Company/CompanyApi/CompanyApi.csproj" />
   <Project Path="BE/Company/CompanySdk/CompanySdk.csproj" Id="4d933ab1-5868-41ac-a14c-9ac42b314a28" />
@@ -12,6 +13,7 @@
   <Folder Name="/BE/Dapr/" />
   <Folder Name="/BE/Dapr/Development/">
     <File Path="BE/Dapr/Development/RabbitMQ.yml" />
+  <File Path="BE/Dapr/Development/statestore.yaml" />
     <File Path="BE/Dapr/Development/subscription.yml" />
   </Folder>
 <Folder Name="/FE/">
