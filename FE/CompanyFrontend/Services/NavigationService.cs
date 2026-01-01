@@ -44,7 +44,11 @@ namespace CompanyFrontend.Services
         public void NavigateToList()
         {
             System.Diagnostics.Debug.WriteLine("🔙 Navigating to company list");
-            CurrentView = MainWindowViewModel;
+            var vm = MainWindowViewModel;
+
+            vm.RefreshUserRoles();
+
+            CurrentView = vm;
         }
 
         public void NavigateToEdit(CompanyDto company)

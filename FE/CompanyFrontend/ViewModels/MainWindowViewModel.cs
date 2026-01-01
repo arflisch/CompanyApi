@@ -34,6 +34,11 @@ namespace CompanyFrontend.ViewModels
             _authService = authService;
         }
 
+        public void RefreshUserRoles()
+        {
+            IsAdminUser = _authService.IsAdmin;
+        }
+
         [RelayCommand]
         public async Task LoadCompanies()
         {
@@ -85,6 +90,8 @@ namespace CompanyFrontend.ViewModels
         {
             // 1. Nettoyer le cache MSAL (Token)
             await _authService.LogoutAsync();
+
+            IsAdminUser = false;
 
             // 2. Retourner à la page de login
             _navigationService.NavigateToLogin();
