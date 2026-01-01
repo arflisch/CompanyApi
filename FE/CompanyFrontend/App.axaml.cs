@@ -48,13 +48,17 @@ namespace CompanyFrontend
 
             // Register Navigation Service (Singleton car il garde l'état de navigation)
             services.AddSingleton<INavigationService, NavigationService>();
-
+            services.AddSingleton<IAuthService, AuthService>();
             // Register ViewModels
             services.AddTransient<MainWindowViewModel>();
             
             // Register Lazy<MainWindowViewModel> to break circular dependency
             services.AddSingleton<Lazy<MainWindowViewModel>>(provider => 
                 new Lazy<MainWindowViewModel>(() => provider.GetRequiredService<MainWindowViewModel>()));
+
+            services.AddTransient<LoginViewModel>();
+            services.AddSingleton<Lazy<LoginViewModel>>(provider =>
+                new Lazy<LoginViewModel>(() => provider.GetRequiredService<LoginViewModel>()));
 
             // Register Views
             services.AddSingleton<MainWindow>();

@@ -1,0 +1,49 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewmodels="using:CompanyFrontend.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="CompanyFrontend.Views.LoginView"
+             x:DataType="viewmodels:LoginViewModel">
+    <Grid RowDefinitions="*,Auto,*" ColumnDefinitions="*,Auto,*">
+        
+        <Border Grid.Row="1" Grid.Column="1" 
+                Padding="40" 
+                Background="#2D2D2D" 
+                CornerRadius="10" 
+                BoxShadow="0 0 10 0 Black">
+            
+            <StackPanel Spacing="20" Width="300">
+                <TextBlock Text="Company App" 
+                           FontSize="24" 
+                           FontWeight="Bold" 
+                           HorizontalAlignment="Center"/>
+
+                <TextBlock Text="Please sign in to continue" 
+                           Foreground="Gray" 
+                           HorizontalAlignment="Center"/>
+
+                <Button Command="{Binding LoginCommand}"
+                        Content="Sign In with Microsoft"
+                        Classes="accent"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        Height="40"
+                        IsEnabled="{Binding !IsBusy}"/>
+
+                <StackPanel IsVisible="{Binding IsBusy}" Spacing="10">
+                    <ProgressBar IsIndeterminate="True"/>
+                    <TextBlock Text="Connecting..." HorizontalAlignment="Center"/>
+                </StackPanel>
+
+                <TextBlock Text="{Binding ErrMessage}"
+                           Foreground="#FF5555"
+                           TextWrapping="Wrap"
+                           HorizontalAlignment="Center"
+                           IsVisible="{Binding ErrMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

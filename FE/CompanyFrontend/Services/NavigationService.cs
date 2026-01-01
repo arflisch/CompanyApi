@@ -9,13 +9,14 @@ namespace CompanyFrontend.Services
     {
         private readonly ICompanyService _companyService;
         private readonly Lazy<MainWindowViewModel> _mainWindowViewModel;
+        private readonly Lazy<LoginViewModel> _loginViewModel;
         private object? _currentView;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public object CurrentView
         {
-            get => _currentView ?? MainWindowViewModel;
+            get => _currentView ?? _loginViewModel.Value;
             private set
             {
                 if (_currentView != value)
@@ -28,10 +29,16 @@ namespace CompanyFrontend.Services
 
         private MainWindowViewModel MainWindowViewModel => _mainWindowViewModel.Value;
 
-        public NavigationService(ICompanyService companyService, Lazy<MainWindowViewModel> mainWindowViewModel)
+        public NavigationService(ICompanyService companyService, Lazy<MainWindowViewModel> mainWindowViewModel, Lazy<LoginViewModel> loginViewModel)
         {
             _companyService = companyService;
             _mainWindowViewModel = mainWindowViewModel;
+            _loginViewModel = loginViewModel;
+        }
+
+        public void NavigateToLogin()
+        {
+            CurrentView = _loginViewModel.Value;
         }
 
         public void NavigateToList()

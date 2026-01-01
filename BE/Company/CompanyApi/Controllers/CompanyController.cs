@@ -55,6 +55,7 @@ namespace CompanyApi.Controllers
 
         [ProducesResponseType(typeof(CompanyDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Roles = "CompanyAdmin")]
         [HttpPost]
         public async Task<IActionResult> CreateCompany([FromBody] CreateCompanyDto createCompanydto, [FromServices] ICreateCompanyCommand createCompanyCommand)
         {
@@ -136,7 +137,7 @@ namespace CompanyApi.Controllers
             _logger.LogError("An error occurred while deleting company with Id: {CompanyId}. Detail: {Detail}", id, problemDetails.Detail);
             return BadRequest(problemDetails);
         }
-
+        [Authorize(Roles = "CompanyAdmin")]
         [HttpPut("{id:long}")]
         public async Task<IActionResult> UpdateCompany(long id, [FromBody] CreateCompanyDto companydto, [FromServices] IUpdateCompanyCommand updateCompanyCommand)
         {

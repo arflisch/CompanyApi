@@ -9,5 +9,6 @@ namespace CompanyFrontend.Services
         void NavigateToList();
         void NavigateToEdit(CompanyDto company);
         void NavigateToCreate();
+        void NavigateToLogin();
     }
 }

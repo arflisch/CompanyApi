@@ -13,6 +13,7 @@ namespace CompanyFrontend.ViewModels
     {
         private readonly ICompanyService _companyService;
         private readonly INavigationService _navigationService;
+        private readonly IAuthService _authService;
 
         [ObservableProperty]
         private string welcomeMessage = "Welcome";
@@ -23,10 +24,14 @@ namespace CompanyFrontend.ViewModels
         [ObservableProperty]
         private bool isLoading;
 
-        public MainWindowViewModel(ICompanyService companyService, INavigationService navigationService)
+        [ObservableProperty]
+        private bool isAdminUser;
+
+        public MainWindowViewModel(ICompanyService companyService, INavigationService navigationService, IAuthService authService)
         {
             _companyService = companyService;
             _navigationService = navigationService;
+            _authService = authService;
         }
 
         [RelayCommand]
@@ -37,7 +42,9 @@ namespace CompanyFrontend.ViewModels
             try
             {
                 Companies.Clear();
-                
+
+                IsAdminUser = _authService.IsAdmin;
+
                 var companiesList = await _companyService.GetAllCompaniesAsync();
 
                 System.Diagnostics.Debug.WriteLine($"✅ Received {companiesList.Count} companies");
@@ -71,6 +78,16 @@ namespace CompanyFrontend.ViewModels
         private void CreateCompany()
         {
             _navigationService.NavigateToCreate();
+        }
+
+        [RelayCommand]
+        public async Task Logout()
+        {
+            // 1. Nettoyer le cache MSAL (Token)
+            await _authService.LogoutAsync();
+
+            // 2. Retourner à la page de login
+            _navigationService.NavigateToLogin();
         }
 
         public void OnCompanySaved(CompanyDto updatedCompany)

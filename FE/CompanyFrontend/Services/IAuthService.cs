@@ -9,5 +9,6 @@ namespace CompanyFrontend.Services
     {
         Task<string?> LoginAsync();
         Task LogoutAsync();
+        bool IsAdmin { get; }
     }
 }

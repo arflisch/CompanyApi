@@ -11,7 +11,11 @@
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10">
             <Button Content="Load companies" Command="{Binding LoadCompaniesCommand}"/>
             <Button Content="Create a company" 
-                    Command="{ReflectionBinding $parent[UserControl].DataContext.CreateCompanyCommand}"/>
+                    Command="{ReflectionBinding $parent[UserControl].DataContext.CreateCompanyCommand}"
+                    IsVisible="{Binding IsAdminUser}"/>
+            <Button Content="Logout" 
+                    Command="{ReflectionBinding $parent[UserControl].DataContext.LogoutCommand}"
+                    Background="#555555"/>
         </StackPanel>
         
         <DataGrid ItemsSource="{Binding Companies}"
@@ -31,6 +35,7 @@
                             <Button Content="Edit" 
                                     Command="{ReflectionBinding $parent[UserControl].DataContext.EditCompanyCommand}"
                                     CommandParameter="{Binding}" 
+                                    IsVisible="{ReflectionBinding $parent[UserControl].DataContext.IsAdminUser}"
                                     Margin="5"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
