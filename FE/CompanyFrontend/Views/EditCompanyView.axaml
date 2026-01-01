@@ -1,0 +1,91 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewmodels="using:CompanyFrontend.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="CompanyFrontend.Views.EditCompanyView"
+             x:DataType="viewmodels:EditCompanyViewModel">
+    
+    <UserControl.Styles>
+        <Style Selector="TextBlock.label">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
+        </Style>
+        <Style Selector="TextBox">
+            <Setter Property="Padding" Value="8"/>
+        </Style>
+    </UserControl.Styles>
+    
+    <DockPanel Margin="20">
+        <!-- Boutons en bas -->
+        <StackPanel DockPanel.Dock="Bottom" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right" 
+                    Spacing="10"
+                    Margin="0,20,0,0">
+            <Button Content="Cancel" 
+                    Command="{Binding CancelCommand}"
+                    Width="100"
+                    Height="35"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"/>
+            <Button Content="Save" 
+                    Command="{Binding SaveCommand}"
+                    Width="100"
+                    Height="35"
+                    Classes="accent"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Contenu principal -->
+        <ScrollViewer>
+            <StackPanel Spacing="15">
+                <!-- Titre -->
+                <TextBlock Text="Edit Company Information" 
+                           FontSize="24" 
+                           FontWeight="Bold"
+                           Margin="0,0,0,20"/>
+
+                <!-- Name -->
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Company Name:" Classes="label"/>
+                    <TextBox Text="{Binding Name}" 
+                             Watermark="Enter company name"
+                             MaxLength="200"/>
+                </StackPanel>
+
+                <!-- VAT -->
+                <StackPanel Spacing="5">
+                    <TextBlock Text="VAT Number:" Classes="label"/>
+                    <TextBox Text="{Binding Vat}" 
+                             Watermark="Enter VAT number"
+                             MaxLength="50"/>
+                </StackPanel>
+
+                <!-- Message d'erreur -->
+                <Border Background="#AA0000" 
+                        CornerRadius="5"
+                        Padding="10"
+                        IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                    <TextBlock Text="{Binding ErrorMessage}" 
+                               Foreground="White"
+                               TextWrapping="Wrap"/>
+                </Border>
+
+                <!-- Progress bar -->
+                <ProgressBar IsIndeterminate="True" 
+                             IsVisible="{Binding IsSaving}"
+                             Height="4"
+                             Margin="0,10"/>
+                
+                <TextBlock Text="Saving..." 
+                           IsVisible="{Binding IsSaving}"
+                           HorizontalAlignment="Center"
+                           FontStyle="Italic"
+                           Foreground="Gray"/>
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

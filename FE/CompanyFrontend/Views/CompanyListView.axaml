@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewmodels="using:CompanyFrontend.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="CompanyFrontend.Views.CompanyListView"
+             x:DataType="viewmodels:MainWindowViewModel">
+    
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10">
+            <Button Content="Load companies" Command="{Binding LoadCompaniesCommand}"/>
+            <Button Content="Create a company" 
+                    Command="{ReflectionBinding $parent[UserControl].DataContext.CreateCompanyCommand}"
+                    IsVisible="{Binding IsAdminUser}"/>
+            <Button Content="Logout" 
+                    Command="{ReflectionBinding $parent[UserControl].DataContext.LogoutCommand}"
+                    Background="#555555"/>
+        </StackPanel>
+        
+        <DataGrid ItemsSource="{Binding Companies}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  GridLinesVisibility="All"
+                  BorderThickness="1"
+                  Background="#343434"
+                  Margin="10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="Auto"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Vat" Binding="{Binding Vat}" Width="*"/>
+                <DataGridTemplateColumn Header="Actions" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:CompileBindings="False">
+                            <Button Content="Edit" 
+                                    Command="{ReflectionBinding $parent[UserControl].DataContext.EditCompanyCommand}"
+                                    CommandParameter="{Binding}" 
+                                    IsVisible="{ReflectionBinding $parent[UserControl].DataContext.IsAdminUser}"
+                                    Margin="5"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>

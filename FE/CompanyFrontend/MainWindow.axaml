@@ -1,0 +1,34 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewmodels="using:CompanyFrontend.ViewModels"
+        xmlns:views="using:CompanyFrontend.Views"
+        xmlns:services="using:CompanyFrontend.Services"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="CompanyFrontend.MainWindow"
+        x:DataType="services:INavigationService"
+        Title="CompanyFrontend">
+    
+    <!-- ContentControl pour la navigation entre vues -->
+    <ContentControl Content="{Binding CurrentView}">
+        <ContentControl.DataTemplates>
+            <DataTemplate DataType="viewmodels:LoginViewModel">
+                <views:LoginView/>
+            </DataTemplate>
+            <!-- Template pour afficher CompanyListView quand CurrentView = MainWindowViewModel -->
+            <DataTemplate DataType="viewmodels:MainWindowViewModel">
+                <views:CompanyListView/>
+            </DataTemplate>
+            
+            <!-- Template pour afficher EditCompanyView quand CurrentView = EditCompanyViewModel -->
+            <DataTemplate DataType="viewmodels:EditCompanyViewModel">
+                <views:EditCompanyView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="viewmodels:CreateCompanyViewModel">
+                <views:CreateCompanyView/>
+            </DataTemplate>
+        </ContentControl.DataTemplates>
+    </ContentControl>
+</Window>

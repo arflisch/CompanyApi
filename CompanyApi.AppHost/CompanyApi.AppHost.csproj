@@ -14,12 +14,14 @@
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.AppHost" Version="9.5.2" />
     <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="9.5.2" />
+    <PackageReference Include="Aspire.Hosting.Redis" Version="9.5.2" />
     <PackageReference Include="Aspire.Npgsql" Version="9.5.2" />
     <PackageReference Include="CommunityToolkit.Aspire.Hosting.Dapr" Version="9.8.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CompanyApi\CompanyApi.csproj" />
+    <ProjectReference Include="..\BE\Company\CompanyApi\CompanyApi.csproj" />
+    <ProjectReference Include="..\FE\CompanyFrontend\CompanyFrontend.csproj" />
   </ItemGroup>
 
 </Project>
