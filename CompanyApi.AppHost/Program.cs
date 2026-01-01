@@ -25,4 +25,14 @@ companyApi
         AppProtocol = "https"
     });
 
+var notificationService = builder.AddProject<Projects.NotificationService>("notificationservice")
+    .WithDaprSidecar(new DaprSidecarOptions
+    {
+        AppId = "notification-service",
+        AppPort = 7026,
+        ResourcesPaths = ["../BE/Dapr/Development"],
+        LogLevel = "debug",
+        AppProtocol = "https"
+    });
+
 builder.Build().Run();

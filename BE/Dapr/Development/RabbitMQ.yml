@@ -16,4 +16,5 @@ spec:
     value: "channel1"
 scopes:
 - company-api
+- notification-service
 

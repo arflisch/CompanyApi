@@ -10,6 +10,9 @@
   <Project Path="BE/Company/Database/Database.csproj" />
   <Project Path="BE/Company/Domain/Domain.csproj" />
   </Folder>
+  <Folder Name="/BE/Notification/">
+  <Project Path="BE/Notification/NotificationService/NotificationService.csproj" />
+  </Folder>
   <Folder Name="/BE/Dapr/" />
   <Folder Name="/BE/Dapr/Development/">
     <File Path="BE/Dapr/Development/RabbitMQ.yml" />
