@@ -1,11 +1,13 @@
 ﻿using Application;
 using Domain;
 using Domain.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
 namespace CompanyApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     [ApiExplorerSettings(GroupName = "facade")]
