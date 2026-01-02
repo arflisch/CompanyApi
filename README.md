@@ -275,11 +275,11 @@ CompanyApi/
 ?   ?   ??? Database/                  # EF Core & repositories
 ?   ?   ??? CompanySdk/                # Generated client SDK
 ?   ?   ??? Application.Test/          # Unit tests
-│   │   Notification/                # Notification microservice
-│   │   │   NotificationService/      # Email notification service
-│   │   │   │   Controllers/          # Notification endpoints
-│   │   │   │   Models/               # Notification DTOs
-│   │   │   │   Program.cs            # Startup & Dapr integration
+?   ?   Notification/                # Notification microservice
+?   ?   ?   NotificationService/      # Email notification service
+?   ?   ?   ?   Controllers/          # Notification endpoints
+?   ?   ?   ?   Models/               # Notification DTOs
+?   ?   ?   ?   Program.cs            # Startup & Dapr integration
 ?   ??? CompanyApi.ServiceDefaults/    # Aspire shared services
 ?   ??? Dapr/
 ?       ??? Development/               # Dapr components
