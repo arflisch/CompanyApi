@@ -46,7 +46,13 @@ CompanyApi is a full-stack distributed application demonstrating modern microser
     ?   + Dapr Sidecar     ?           ?      (Desktop)        ?
     ?   Port: 7223         ?           ?                       ?
     ????????????????????????           ?????????????????????????
-            ?
+            │                              │
+            │                    ┌─────────────────────────┐
+            │                    │  NotificationService     │
+            │                    │    + Dapr Sidecar        │
+            │                    │    Port: 7026            │
+            │                    └─────────────────────────┘
+            │                              │
             ?  ???????????????????????????????????????????
             ???? PostgreSQL Database (Port: 5433)       ?
             ?  ???????????????????????????????????????????
@@ -59,6 +65,7 @@ CompanyApi is a full-stack distributed application demonstrating modern microser
             ?  ???????????????????????????????????????????
             ???? RabbitMQ (Pub/Sub via Dapr)            ?
                ?  Events: companycreated                ?
+               │  Subscribers: NotificationService      │
                ???????????????????????????????????????????
 ```
 
@@ -244,6 +251,7 @@ dotnet run
 
 - **API**: https://localhost:7223
 - **Swagger UI**: https://localhost:7223/swagger/facade
+- **NotificationService API**: https://localhost:7026
 - **Aspire Dashboard**: http://localhost:15000 (when using Aspire)
 - **RabbitMQ Management**: http://localhost:15672 (guest/guest)
 - **Redis Commander**: http://localhost:8081 (when using Aspire)
@@ -267,6 +275,11 @@ CompanyApi/
 ?   ?   ??? Database/                  # EF Core & repositories
 ?   ?   ??? CompanySdk/                # Generated client SDK
 ?   ?   ??? Application.Test/          # Unit tests
+│   │   Notification/                # Notification microservice
+│   │   │   NotificationService/      # Email notification service
+│   │   │   │   Controllers/          # Notification endpoints
+│   │   │   │   Models/               # Notification DTOs
+│   │   │   │   Program.cs            # Startup & Dapr integration
 ?   ??? CompanyApi.ServiceDefaults/    # Aspire shared services
 ?   ??? Dapr/
 ?       ??? Development/               # Dapr components
@@ -294,6 +307,7 @@ CompanyApi/
 - ? **Repository Pattern**: Clean separation of data access
 - ? **Metrics**: Custom application metrics (e.g., company operations)
 - ? **Query Optimization**: No-tracking queries for read operations
+- 📧 **Notification Service**: Event-driven email notifications via RabbitMQ pub/sub
 
 ### Frontend Capabilities
 
