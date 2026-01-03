@@ -26,7 +26,7 @@
 
                 <Button Command="{Binding LoginCommand}"
                         Content="Sign In with Microsoft"
-                        Classes="accent"
+                        Classes="primary"
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Center"
                         VerticalContentAlignment="Center"

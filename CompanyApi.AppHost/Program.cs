@@ -8,9 +8,11 @@ var builder = DistributedApplication.CreateBuilder(args);
 var redis = builder.AddRedis("redis")
     .WithRedisCommander(); // Interface web pour visualiser Redis
 
+var postgres = builder.AddConnectionString("DefaultConnection");
+
 // Add your API project
 var companyApi = builder.AddProject<Projects.CompanyApi>("companyapi")
-    .WithEnvironment("ConnectionStrings__DefaultConnection", "Host=localhost;Port=5433;Database=company_db;Username=cae_user;Password=cae");
+    .WithReference(postgres);  
 
 //var companyFrontend = builder.AddProject<Projects.CompanyFrontend>("companyfrontend");
 
