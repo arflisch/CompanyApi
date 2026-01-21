@@ -1,10 +1,8 @@
 ﻿using Application.Services;
 using Database;
 using Domain;
+using MongoDB.Bson;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Test
 {
@@ -28,8 +26,8 @@ namespace Application.Test
         {
             var cachedCompanies = new List<Company>
             {
-                new Company { Id = 1, Name = "Cached Company 1", Vat = "VAT001" },
-                new Company { Id = 2, Name = "Cached Company 2", Vat = "VAT002" }
+                new Company { Id = ObjectId.GenerateNewId(), Name = "Cached Company 1", Vat = "VAT001" },
+                new Company { Id = ObjectId.GenerateNewId(), Name = "Cached Company 2", Vat = "VAT002" }
             };
 
             _daprCacheServiceMock.Setup(x => x.GetAllCompaniesAsync()).ReturnsAsync(cachedCompanies);
@@ -39,7 +37,7 @@ namespace Application.Test
             Assert.NotNull(result);
             Assert.Equal(cachedCompanies.Count, result.Count);
 
-            _repositoryMock.Verify(x => x.getAllCompaniesAsync(), Times.Never);
+            _repositoryMock.Verify(x => x.GetAllCompaniesAsync(), Times.Never);
         }
 
         [Fact]
@@ -47,15 +45,15 @@ namespace Application.Test
         {
             var dbCompanies = new List<Company>
             {
-                new Company { Id = 1, Name = "DB Company 1", Vat = "VAT101" },
-                new Company { Id = 2, Name = "DB Company 2", Vat = "VAT102" }
+                new Company { Id = ObjectId.GenerateNewId(), Name = "DB Company 1", Vat = "VAT101" },
+                new Company { Id = ObjectId.GenerateNewId(), Name = "DB Company 2", Vat = "VAT102" }
             };
             _daprCacheServiceMock.Setup(x => x.GetAllCompaniesAsync()).ReturnsAsync((List<Company>?)null);
-            _repositoryMock.Setup(x => x.getAllCompaniesAsync()).ReturnsAsync(dbCompanies);
+            _repositoryMock.Setup(x => x.GetAllCompaniesAsync()).ReturnsAsync(dbCompanies);
             var result = await _command.GetAllCompaniesAsync();
             Assert.NotNull(result);
             Assert.Equal(dbCompanies.Count, result.Count);
-            _repositoryMock.Verify(x => x.getAllCompaniesAsync(), Times.Once);
+            _repositoryMock.Verify(x => x.GetAllCompaniesAsync(), Times.Once);
             _daprCacheServiceMock.Verify(x => x.SetAllCompaniesAsync(It.IsAny<List<Company>>()), Times.Once);
         }
 
@@ -63,11 +61,11 @@ namespace Application.Test
         public async Task GetAllCompaniesAsync_ShouldReturnEmptyList_WhenNoCompaniesInCacheOrDb()
         {
             _daprCacheServiceMock.Setup(x => x.GetAllCompaniesAsync()).ReturnsAsync((List<Company>?)null);
-            _repositoryMock.Setup(x => x.getAllCompaniesAsync()).ReturnsAsync(new List<Company>());
+            _repositoryMock.Setup(x => x.GetAllCompaniesAsync()).ReturnsAsync(new List<Company>());
             var result = await _command.GetAllCompaniesAsync();
             Assert.NotNull(result);
             Assert.Empty(result);
-            _repositoryMock.Verify(x => x.getAllCompaniesAsync(), Times.Once);
+            _repositoryMock.Verify(x => x.GetAllCompaniesAsync(), Times.Once);
             _daprCacheServiceMock.Verify(x => x.SetAllCompaniesAsync(It.IsAny<List<Company>>()), Times.Once);
         }
 
@@ -75,9 +73,9 @@ namespace Application.Test
         public async Task GetAllCompaniesAsync_ShouldHandleException_WhenRepositoryThrows()
         {
             _daprCacheServiceMock.Setup(x => x.GetAllCompaniesAsync()).ReturnsAsync((List<Company>?)null);
-            _repositoryMock.Setup(x => x.getAllCompaniesAsync()).ThrowsAsync(new Exception("Database error"));
+            _repositoryMock.Setup(x => x.GetAllCompaniesAsync()).ThrowsAsync(new Exception("Database error"));
             await Assert.ThrowsAsync<Exception>(async () => await _command.GetAllCompaniesAsync());
-            _repositoryMock.Verify(x => x.getAllCompaniesAsync(), Times.Once);
+            _repositoryMock.Verify(x => x.GetAllCompaniesAsync(), Times.Once);
         }
     }
 }

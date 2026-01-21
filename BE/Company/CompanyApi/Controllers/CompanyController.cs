@@ -27,11 +27,11 @@ namespace CompanyApi.Controllers
             return await getCompaniesCommand.GetAllCompaniesAsync();
         }
 
-        [HttpGet("{id:long}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(CompanyDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetCompanyById(
-            long id, 
+            string id, 
             [FromServices] IGetCompanyByIdCommand getCompanyByIdCommand)
         {
             _logger.LogInformation("Retrieving company with Id: {CompanyId}", id);
@@ -98,8 +98,8 @@ namespace CompanyApi.Controllers
             return BadRequest(problemDetails);
         }
 
-        [HttpDelete("{id:long}")]
-        public async Task<IActionResult> DeleteCompany(long id, [FromServices] IDeleteCompanyCommand deleteCompanyCommand)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCompany(string id, [FromServices] IDeleteCompanyCommand deleteCompanyCommand)
         {
             _logger.LogInformation("Deleting company with Id: {CompanyId}", id);
 
@@ -138,8 +138,8 @@ namespace CompanyApi.Controllers
             return BadRequest(problemDetails);
         }
         [Authorize(Roles = "CompanyAdmin")]
-        [HttpPut("{id:long}")]
-        public async Task<IActionResult> UpdateCompany(long id, [FromBody] CreateCompanyDto companydto, [FromServices] IUpdateCompanyCommand updateCompanyCommand)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCompany(string id, [FromBody] CreateCompanyDto companydto, [FromServices] IUpdateCompanyCommand updateCompanyCommand)
         {
             _logger.LogInformation("Updating company with Id: {CompanyId}", id);
 
@@ -179,8 +179,8 @@ namespace CompanyApi.Controllers
             return BadRequest(problemDetails);
         }
 
-        [HttpPatch("name/{id:long}/{Name}")]
-        public async Task<IActionResult> PatchCompanyName(long id, string Name, [FromServices] IPatchCompanyCommand repository)
+        [HttpPatch("name/{id}/{Name}")]
+        public async Task<IActionResult> PatchCompanyName(string id, string Name, [FromServices] IPatchCompanyCommand repository)
         {
             _logger.LogInformation("Patching company name for Id: {CompanyId}", id);
 
@@ -194,8 +194,8 @@ namespace CompanyApi.Controllers
             return BadRequest(result.Errors);
         }
 
-        [HttpPatch("Vat/{id:long}/{Vat}")]
-        public async Task<IActionResult> PatchCompanyVat(long id, string Vat, [FromServices] IPatchCompanyCommand repository)
+        [HttpPatch("Vat/{id}/{Vat}")]
+        public async Task<IActionResult> PatchCompanyVat(string id, string Vat, [FromServices] IPatchCompanyCommand repository)
         {
             _logger.LogInformation("Patching company VAT for Id: {CompanyId}", id);
             var result = await repository.PatchCompanyVatAsync(id, Vat);

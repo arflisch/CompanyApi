@@ -5,11 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 
 namespace Application
 {
     public interface IUpdateCompanyCommand
     {
-        Task<Result> UpdateCompanyAsync(long id, CreateCompanyDto companyDto);
+        Task<Result> UpdateCompanyAsync(string id, CreateCompanyDto companyDto);
     }
 }

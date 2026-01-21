@@ -3,6 +3,7 @@ using Database;
 using Domain;
 using FluentResults;
 using System.Diagnostics;
+using MongoDB.Bson;
 
 namespace Application
 {
@@ -18,10 +19,10 @@ namespace Application
             this.companyMetrics = companyMetrics;
         }
 
-        public async Task<Result> DeleteCompanyAsync(long id)
+        public async Task<Result> DeleteCompanyAsync(string id)
         {
             using var activity = ActivitySource.StartActivity("DeleteCompanyCommand-DeleteCompanyAsync");
-            if (id <= 0)
+            if (int.Parse(id) <= 0)
             {
                 return Result.Fail(new ValidationError("Valid Id is required"));
             }
@@ -32,7 +33,7 @@ namespace Application
                 try
                 {
                     retrievalActivity?.SetTag("company.id", id);
-                    company = await repository.getCompanyByIdAsync(id);
+                    company = await repository.GetCompanyByIdAsync(id);
 
                     if (company == null)
                     {
@@ -63,7 +64,7 @@ namespace Application
                     deletionActivity?.SetTag("company.id", id);
                     deletionActivity?.SetTag("company.name", company.Name);
 
-                    await repository.deleteAsync(company);
+                    await repository.DeleteAsync(company);
 
                     deletionActivity?.SetStatus(ActivityStatusCode.Ok);
                     deletionActivity?.AddEvent(new ActivityEvent("CompanyDeleted",

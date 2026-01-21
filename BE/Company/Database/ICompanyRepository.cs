@@ -5,18 +5,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 
 namespace Database
 {
     public interface ICompanyRepository<Company>
     {
-        Task createAsync(Company company);
-        Task updateAsync(Company company);
-        Task deleteAsync(Company company);
-        Task patchAsync(Company company);
+        Task CreateAsync(Company company);
+        Task UpdateAsync(Company company);
+        Task DeleteAsync(Company company);
+        Task PatchAsync(Company company);
 
-        Task<List<Company>> getAllCompaniesAsync();
+        Task<List<Company>> GetAllCompaniesAsync();
 
-        Task<Company?> getCompanyByIdAsync(long id);
+        Task<Company?> GetCompanyByIdAsync(string id);
     }
 }

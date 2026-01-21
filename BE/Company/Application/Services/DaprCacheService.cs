@@ -18,7 +18,7 @@ namespace Application.Services
             _daprClient = daprClient;
         }
 
-        public async Task<Company?> GetCompanyAsync(long id)
+        public async Task<Company?> GetCompanyAsync(string id)
         {
             using var activity = ActivitySource.StartActivity("GetCompanyFromCache");
             activity?.SetTag("company.id", id);
@@ -71,7 +71,7 @@ namespace Application.Services
             }
         }
 
-        public async Task RemoveCompanyAsync(long id)
+        public async Task RemoveCompanyAsync(string id)
         {
             using var activity = ActivitySource.StartActivity("RemoveCompanyFromCache");
             activity?.SetTag("company.id", id);

@@ -45,25 +45,25 @@ namespace CompanyFrontend.Services
             return await _companyClient.CreateCompanyAsync(companyDto);
         }
 
-        public async Task<FileResponse> UpdateCompanyAsync(long id, CreateCompanyDto companyDto)
+        public async Task<FileResponse> UpdateCompanyAsync(string id, CreateCompanyDto companyDto)
         {
             await PrepareAuthenticatedRequestAsync();
             return await _companyClient.UpdateCompanyAsync(id, companyDto);
         }
 
-        public async Task<FileResponse> DeleteCompanyAsync(long id)
+        public async Task<FileResponse> DeleteCompanyAsync(string id)
         {
             await PrepareAuthenticatedRequestAsync();
             return await _companyClient.DeleteCompanyAsync(id);
         }
 
-        public async Task<FileResponse> PatchCompanyName(long id, string name)
+        public async Task<FileResponse> PatchCompanyName(string id, string name)
         {
             await PrepareAuthenticatedRequestAsync();
             return await _companyClient.PatchCompanyNameAsync(id, name);
         }
 
-        public async Task<FileResponse> PatchCompanyVat(long id, string vat)
+        public async Task<FileResponse> PatchCompanyVat(string id, string vat)
         {
             await PrepareAuthenticatedRequestAsync();
             return await _companyClient.PatchCompanyVatAsync(id, vat);

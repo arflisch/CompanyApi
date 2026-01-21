@@ -43,7 +43,8 @@ builder.Services.AddValidatorsFromAssemblyContaining<CompanyDtoValidator>();
 
 builder.Services.AddDbContext<dbContext>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    options.UseMongoDB(connectionString, "company_db");
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 

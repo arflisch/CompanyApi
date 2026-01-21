@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson;
 
 namespace Database
 {
@@ -15,21 +16,21 @@ namespace Database
         {
             _dbContext = dbContext;
         }
-        public async Task createAsync(Company company)
+        public async Task CreateAsync(Company company)
         {
             await _dbContext.Companys.AddAsync(company);
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task deleteAsync(Company company)
+        public async Task DeleteAsync(Company company)
         {
             _dbContext.Companys.Remove(company);
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task patchAsync(Company company)
+        public async Task PatchAsync(Company company)
         {
-            var existing = await getCompanyByIdAsync(company.Id);
+            var existing = await GetCompanyByIdAsync(company.Id.ToString());
             if (existing != null)
             {
                 if (!string.IsNullOrEmpty(company.Name))
@@ -41,18 +42,22 @@ namespace Database
             }
         }
 
-        public async Task updateAsync(Company company)
+        public async Task UpdateAsync(Company company)
         {
             _dbContext.Companys.Update(company);
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<Company?> getCompanyByIdAsync(long id)
+        public async Task<Company?> GetCompanyByIdAsync(string id)
         {
-            return await _dbContext.Companys.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+            if (!ObjectId.TryParse(id, out var objectId))
+            {
+                return null;
+            }
+            return await _dbContext.Companys.AsNoTracking().FirstOrDefaultAsync(c => c.Id == objectId);
         }
 
-        public async Task<List<Company>> getAllCompaniesAsync()
+        public async Task<List<Company>> GetAllCompaniesAsync()
         {
             return await _dbContext.Companys
                 .AsNoTracking()

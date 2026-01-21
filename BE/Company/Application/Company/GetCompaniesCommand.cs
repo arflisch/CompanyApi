@@ -39,7 +39,7 @@ namespace Application
                     
                     return cachedCompanies.Select(c => new CompanyDto
                     {
-                        Id = c.Id,
+                        Id = c.Id.ToString(),
                         Name = c.Name,
                         Vat = c.Vat
                     }).ToList();
@@ -55,7 +55,7 @@ namespace Application
             {
                 System.Diagnostics.Debug.WriteLine("⚠️ Cache MISS: Loading companies from database");
                 
-                var allCompanies = await _repository.getAllCompaniesAsync();
+                var allCompanies = await _repository.GetAllCompaniesAsync();
                 
                 dbActivity?.SetTag("companies.count", allCompanies.Count);
                 
@@ -66,7 +66,7 @@ namespace Application
 
                 return allCompanies.Select(c => new CompanyDto
                 {
-                    Id = c.Id,
+                    Id = c.Id.ToString(),
                     Name = c.Name,
                     Vat = c.Vat
                 }).ToList();

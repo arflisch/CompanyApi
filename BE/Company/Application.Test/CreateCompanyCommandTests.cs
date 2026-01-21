@@ -8,6 +8,7 @@ using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Diagnostics.Metrics;
+using MongoDB.Bson;
 
 namespace Application.Test
 {
@@ -72,14 +73,14 @@ namespace Application.Test
             _validatorMock.Setup(v => v.ValidateAsync(dto, default))
                           .ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
-            _repositoryMock.Setup(r => r.createAsync(It.IsAny<Company>()))
-                     .Callback<Company>(c => c.Id = 123) // Simule la DB qui met l'ID
+            _repositoryMock.Setup(r => r.CreateAsync(It.IsAny<Company>()))
+                     .Callback<Company>(c => c.Id = ObjectId.GenerateNewId()) // Simule la DB qui met l'ID
                      .Returns(Task.CompletedTask);
 
             var result = await _command.CreateCompanyAsync(dto);
 
             Assert.True(result.IsSuccess);
-            _repositoryMock.Verify(r => r.createAsync(It.IsAny<Company>()), Times.Once);
+            _repositoryMock.Verify(r => r.CreateAsync(It.IsAny<Company>()), Times.Once);
 
             // Vérifier que le cache a été invalidé
             _daprCacheServiceMock.Verify(c => c.InvalidateAllCompaniesAsync(), Times.Once);
@@ -129,7 +130,7 @@ namespace Application.Test
             var dto = new CreateCompanyDto { Name = "DbFail Corp", Vat = "BE666" };
             _validatorMock.Setup(v => v.ValidateAsync(dto, default)).ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
-            _repositoryMock.Setup(r => r.createAsync(It.IsAny<Company>()))
+            _repositoryMock.Setup(r => r.CreateAsync(It.IsAny<Company>()))
                      .ThrowsAsync(new Exception("Database error"));
 
             // Act

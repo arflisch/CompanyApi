@@ -14,7 +14,7 @@ namespace CompanyFrontend.ViewModels
         private readonly Action _onCancelled;
 
         [ObservableProperty]
-        private long companyId;
+        private string companyId;
 
         [ObservableProperty]
         private string name = string.Empty;
@@ -34,7 +34,7 @@ namespace CompanyFrontend.ViewModels
             _onSaved = onSaved;
             _onCancelled = onCancelled;
 
-            CompanyId = company.Id;
+            CompanyId = company.Id.ToString();
             Name = company.Name ?? string.Empty;
             Vat = company.Vat ?? string.Empty;
 

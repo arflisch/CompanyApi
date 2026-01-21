@@ -2,7 +2,7 @@
 using Application.Services;
 using Database;
 using Domain;
-using Domain.DTO;
+using MongoDB.Bson;
 using Moq;
 using Xunit;
 
@@ -28,7 +28,7 @@ namespace Application.Test
         [Fact]
         public async Task GetCompanyByIdAsync_ShouldReturnCompany_WhenInCache()
         {
-            var companyId = 1L;
+            var companyId = ObjectId.GenerateNewId();
             var cachedCompany = new Company
             {
                 Id = companyId,
@@ -36,21 +36,21 @@ namespace Application.Test
                 Vat = "VAT123"
             };
 
-            _daprCacheServiceMock.Setup(x => x.GetCompanyAsync(companyId)).ReturnsAsync(cachedCompany);
+            _daprCacheServiceMock.Setup(x => x.GetCompanyAsync(companyId.ToString())).ReturnsAsync(cachedCompany);
 
-            var result = await _command.GetCompanyByIdAsync(companyId);
+            var result = await _command.GetCompanyByIdAsync(companyId.ToString());
 
             Assert.NotNull(result);
-            Assert.Equal(cachedCompany.Id, result.Id);
+            Assert.Equal(cachedCompany.Id.ToString(), result.Id);
 
             // Vérifie qu'on n'a PAS appelé la base de données (car trouvé dans le cache)
-            _repositoryMock.Verify(x => x.getCompanyByIdAsync(It.IsAny<long>()), Times.Never);
+            _repositoryMock.Verify(x => x.GetCompanyByIdAsync(It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
         public async Task GetCompanyByIdAsync_ShouldFetchFromDbAndCacheIt_WhenNotInCache()
         {
-            var companyId = 2L;
+            var companyId = ObjectId.GenerateNewId();
             var dbCompany = new Company
             {
                 Id = companyId,
@@ -58,26 +58,26 @@ namespace Application.Test
                 Vat = "VAT456"
             };
 
-            _daprCacheServiceMock.Setup(x => x.GetCompanyAsync(companyId)).ReturnsAsync((Company?)null);
-            _repositoryMock.Setup(x => x.getCompanyByIdAsync(companyId)).ReturnsAsync(dbCompany);
+            _daprCacheServiceMock.Setup(x => x.GetCompanyAsync(companyId.ToString())).ReturnsAsync((Company?)null);
+            _repositoryMock.Setup(x => x.GetCompanyByIdAsync(companyId.ToString())).ReturnsAsync(dbCompany);
 
-            var result = await _command.GetCompanyByIdAsync(companyId);
+            var result = await _command.GetCompanyByIdAsync(companyId.ToString());
 
             Assert.NotNull(result);
-            Assert.Equal(dbCompany.Id, result.Id);
+            Assert.Equal(dbCompany.Id.ToString(), result.Id);
 
-            _repositoryMock.Verify(x => x.getCompanyByIdAsync(companyId), Times.Once);
+            _repositoryMock.Verify(x => x.GetCompanyByIdAsync(companyId.ToString()), Times.Once);
             _daprCacheServiceMock.Verify(x => x.SetCompanyAsync(dbCompany), Times.Once);
         }
 
         [Fact]
         public async Task GetCompanyByIdAsync_ShouldReturnNull_WhenNotFoundAnywhere()
         {
-            var companyId = 3L;
-            _daprCacheServiceMock.Setup(x => x.GetCompanyAsync(companyId)).ReturnsAsync((Company?)null);
-            _repositoryMock.Setup(x => x.getCompanyByIdAsync(companyId)).ReturnsAsync((Company?)null);
+            var companyId = ObjectId.GenerateNewId();
+            _daprCacheServiceMock.Setup(x => x.GetCompanyAsync(companyId.ToString())).ReturnsAsync((Company?)null);
+            _repositoryMock.Setup(x => x.GetCompanyByIdAsync(companyId.ToString())).ReturnsAsync((Company?)null);
 
-            var result = await _command.GetCompanyByIdAsync(companyId);
+            var result = await _command.GetCompanyByIdAsync(companyId.ToString());
 
             Assert.Null(result);
         }

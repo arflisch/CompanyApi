@@ -20,7 +20,7 @@ namespace Application
             _daprCacheService = daprCacheService;
         }
 
-        public async Task<CompanyDto?> GetCompanyByIdAsync(long id)
+        public async Task<CompanyDto?> GetCompanyByIdAsync(string id)
         {
             using var activity = ActivitySource.StartActivity("GetCompanyById");
             activity?.SetTag("company.id", id);
@@ -39,7 +39,7 @@ namespace Application
                     
                     return new CompanyDto
                     {
-                        Id = cachedCompany.Id,
+                        Id = cachedCompany.Id.ToString(),
                         Name = cachedCompany.Name,
                         Vat = cachedCompany.Vat
                     };
@@ -55,7 +55,7 @@ namespace Application
             {
                 System.Diagnostics.Debug.WriteLine($"?? Cache MISS: Loading company {id} from database");
                 
-                var company = await _repository.getCompanyByIdAsync(id);
+                var company = await _repository.GetCompanyByIdAsync(id);
                 
                 if (company == null)
                 {
@@ -73,7 +73,7 @@ namespace Application
 
                 return new CompanyDto
                 {
-                    Id = company.Id,
+                    Id = company.Id.ToString(),
                     Name = company.Name,
                     Vat = company.Vat
                 };

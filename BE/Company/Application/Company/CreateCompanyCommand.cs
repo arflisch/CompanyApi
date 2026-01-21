@@ -89,7 +89,7 @@ namespace Application
                             Vat = companyDto.Vat
                         };
 
-                        await repository.createAsync(company);
+                        await repository.CreateAsync(company);
 
                         persistenceActivity?.SetStatus(ActivityStatusCode.Ok);
                         persistenceActivity?.SetTag("company.id", company.Id);
@@ -117,7 +117,7 @@ namespace Application
                         // Retourner le CompanyDto avec l'ID généré
                         var createdCompanyDto = new CompanyDto
                         {
-                            Id = company.Id,
+                            Id = company.Id.ToString(),
                             Name = company.Name,
                             Vat = company.Vat
                         };

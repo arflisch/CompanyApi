@@ -3,13 +3,9 @@ using Domain;
 using Domain.DTO;
 using FluentResults;
 using FluentValidation;
-using System;
 using System.Diagnostics;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Application.Metrics;
+using MongoDB.Bson;
 
 namespace Application
 {
@@ -27,7 +23,7 @@ namespace Application
             this.companyMetrics = companyMetrics;
         }
 
-        public async Task<Result> UpdateCompanyAsync(long id, CreateCompanyDto companyDto)
+        public async Task<Result> UpdateCompanyAsync(string id, CreateCompanyDto companyDto)
         {
             using var activity = ActivitySource.StartActivity("UpdateCompanyCommand.UpdateCompanyAsync");
 
@@ -67,7 +63,7 @@ namespace Application
             {
                 try
                 {
-                    var company = await repository.getCompanyByIdAsync(id);
+                    var company = await repository.GetCompanyByIdAsync(id);
 
                     if (company == null)
                     {
@@ -77,7 +73,7 @@ namespace Application
                     company.Name = companyDto.Name;
                     company.Vat = companyDto.Vat;
 
-                    await repository.updateAsync(company);
+                    await repository.UpdateAsync(company);
 
                     dbActivity?.SetStatus(ActivityStatusCode.Ok, "Company updated successfully in database");
                     dbActivity?.SetTag("CompanyId", company.Id);

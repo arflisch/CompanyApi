@@ -1,13 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MongoDB.Bson;
 
 namespace Domain
 {
     public class Company
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
+        public ObjectId Id { get; set; }
         public string Name { get; set; } = null!;
         public string Vat { get; set; } = null!;
     }
