@@ -23,8 +23,7 @@ namespace Application
         public async Task<List<CompanyDto>> GetAllCompaniesAsync()
         {
             using var activity = ActivitySource.StartActivity("GetAllCompanies");
-
-            // Try to get from Dapr state store first
+            
             using (var cacheActivity = ActivitySource.StartActivity("GetFromDaprCache"))
             {
                 var cachedCompanies = await _daprCacheService.GetAllCompaniesAsync();
@@ -39,7 +38,7 @@ namespace Application
                     
                     return cachedCompanies.Select(c => new CompanyDto
                     {
-                        Id = c.Id.ToString(),
+                        Id = c.Id,
                         Name = c.Name,
                         Vat = c.Vat
                     }).ToList();
@@ -66,7 +65,7 @@ namespace Application
 
                 return allCompanies.Select(c => new CompanyDto
                 {
-                    Id = c.Id.ToString(),
+                    Id = c.Id,
                     Name = c.Name,
                     Vat = c.Vat
                 }).ToList();

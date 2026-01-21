@@ -14,16 +14,16 @@ namespace Application
             this.repository = repository;
         }
 
-        public async Task<Result> PatchCompanyNameAsync(string companyId, string Name)
+        public async Task<Result> PatchCompanyNameAsync(Guid companyId, string Name)
         {
             Company company = new Company
             {
-                Id = ObjectId.Parse(companyId),
+                Id = companyId,
                 Name = Name
             };
             try
             {
-                if (await repository.GetCompanyByIdAsync(company.Id.ToString()) == null)
+                if (await repository.GetCompanyByIdAsync(company.Id) == null)
                 {
                     return Result.Fail(new ValidationError("Company Not Found"));
                 }
@@ -36,16 +36,16 @@ namespace Application
             }
         }
 
-        public async Task<Result> PatchCompanyVatAsync(string companyId, string Vat)
+        public async Task<Result> PatchCompanyVatAsync(Guid companyId, string Vat)
         {
             Company company = new Company
             {
-                Id = ObjectId.Parse(companyId),
+                Id = companyId,
                 Vat = Vat
             };
             try
             {
-                if (await repository.GetCompanyByIdAsync(company.Id.ToString()) == null)
+                if (await repository.GetCompanyByIdAsync(company.Id) == null)
                 {
                     return Result.Fail(new ValidationError("Company Not Found"));
                 }

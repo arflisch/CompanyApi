@@ -18,7 +18,7 @@ namespace Application.Services
             _daprClient = daprClient;
         }
 
-        public async Task<Company?> GetCompanyAsync(string id)
+        public async Task<Company?> GetCompanyAsync(Guid id)
         {
             using var activity = ActivitySource.StartActivity("GetCompanyFromCache");
             activity?.SetTag("company.id", id);
@@ -31,7 +31,7 @@ namespace Application.Services
                 var cacheHit = company != null;
                 activity?.SetTag("cache.hit", cacheHit);
                 
-                System.Diagnostics.Debug.WriteLine(cacheHit 
+                Debug.WriteLine(cacheHit 
                     ? $"✅ Cache HIT: Company {id} found in Dapr state store" 
                     : $"⚠️ Cache MISS: Company {id} not found in Dapr state store");
                 
@@ -40,7 +40,7 @@ namespace Application.Services
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                System.Diagnostics.Debug.WriteLine($"❌ Error getting company {id} from cache: {ex.Message}");
+                Debug.WriteLine($"❌ Error getting company {id} from cache: {ex.Message}");
                 return null;
             }
         }
@@ -71,7 +71,7 @@ namespace Application.Services
             }
         }
 
-        public async Task RemoveCompanyAsync(string id)
+        public async Task RemoveCompanyAsync(Guid id)
         {
             using var activity = ActivitySource.StartActivity("RemoveCompanyFromCache");
             activity?.SetTag("company.id", id);

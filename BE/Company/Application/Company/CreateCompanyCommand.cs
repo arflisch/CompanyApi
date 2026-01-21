@@ -5,7 +5,6 @@ using FluentResults;
 using FluentValidation;
 using System.Diagnostics;
 using Application.Metrics;
-using Dapr;
 using Dapr.Client;
 using Microsoft.Extensions.Logging;
 using Application.Services;
@@ -85,6 +84,7 @@ namespace Application
                     {
                         Company company = new()
                         {
+                            Id = Guid.NewGuid(),
                             Name = companyDto.Name,
                             Vat = companyDto.Vat
                         };
@@ -117,7 +117,7 @@ namespace Application
                         // Retourner le CompanyDto avec l'ID généré
                         var createdCompanyDto = new CompanyDto
                         {
-                            Id = company.Id.ToString(),
+                            Id = company.Id,
                             Name = company.Name,
                             Vat = company.Vat
                         };

@@ -10,6 +10,6 @@ namespace Application
 {
     public interface IDeleteCompanyCommand
     {
-        Task<Result> DeleteCompanyAsync(string id);
+        Task<Result> DeleteCompanyAsync(Guid id);
     }
 }

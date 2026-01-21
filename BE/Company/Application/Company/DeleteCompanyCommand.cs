@@ -19,10 +19,10 @@ namespace Application
             this.companyMetrics = companyMetrics;
         }
 
-        public async Task<Result> DeleteCompanyAsync(string id)
+        public async Task<Result> DeleteCompanyAsync(Guid id)
         {
             using var activity = ActivitySource.StartActivity("DeleteCompanyCommand-DeleteCompanyAsync");
-            if (int.Parse(id) <= 0)
+            if (id == Guid.Empty)
             {
                 return Result.Fail(new ValidationError("Valid Id is required"));
             }

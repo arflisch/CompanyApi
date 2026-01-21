@@ -23,7 +23,7 @@ namespace Application
             this.companyMetrics = companyMetrics;
         }
 
-        public async Task<Result> UpdateCompanyAsync(string id, CreateCompanyDto companyDto)
+        public async Task<Result> UpdateCompanyAsync(Guid id, CreateCompanyDto companyDto)
         {
             using var activity = ActivitySource.StartActivity("UpdateCompanyCommand.UpdateCompanyAsync");
 

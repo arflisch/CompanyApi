@@ -18,6 +18,6 @@ namespace Database
 
         Task<List<Company>> GetAllCompaniesAsync();
 
-        Task<Company?> GetCompanyByIdAsync(string id);
+        Task<Company?> GetCompanyByIdAsync(Guid id);
     }
 }

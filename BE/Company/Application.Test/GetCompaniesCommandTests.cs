@@ -26,8 +26,8 @@ namespace Application.Test
         {
             var cachedCompanies = new List<Company>
             {
-                new Company { Id = ObjectId.GenerateNewId(), Name = "Cached Company 1", Vat = "VAT001" },
-                new Company { Id = ObjectId.GenerateNewId(), Name = "Cached Company 2", Vat = "VAT002" }
+                new Company { Id = Guid.NewGuid(), Name = "Cached Company 1", Vat = "VAT001" },
+                new Company { Id = Guid.NewGuid(), Name = "Cached Company 2", Vat = "VAT002" }
             };
 
             _daprCacheServiceMock.Setup(x => x.GetAllCompaniesAsync()).ReturnsAsync(cachedCompanies);
@@ -45,8 +45,8 @@ namespace Application.Test
         {
             var dbCompanies = new List<Company>
             {
-                new Company { Id = ObjectId.GenerateNewId(), Name = "DB Company 1", Vat = "VAT101" },
-                new Company { Id = ObjectId.GenerateNewId(), Name = "DB Company 2", Vat = "VAT102" }
+                new Company { Id = Guid.NewGuid(), Name = "DB Company 1", Vat = "VAT101" },
+                new Company { Id = Guid.NewGuid(), Name = "DB Company 2", Vat = "VAT102" }
             };
             _daprCacheServiceMock.Setup(x => x.GetAllCompaniesAsync()).ReturnsAsync((List<Company>?)null);
             _repositoryMock.Setup(x => x.GetAllCompaniesAsync()).ReturnsAsync(dbCompanies);

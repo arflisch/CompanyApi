@@ -74,7 +74,7 @@ namespace Application.Test
                           .ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
             _repositoryMock.Setup(r => r.CreateAsync(It.IsAny<Company>()))
-                     .Callback<Company>(c => c.Id = ObjectId.GenerateNewId()) // Simule la DB qui met l'ID
+                     .Callback<Company>(c => c.Id = Guid.NewGuid()) // Simule la DB qui met l'ID
                      .Returns(Task.CompletedTask);
 
             var result = await _command.CreateCompanyAsync(dto);

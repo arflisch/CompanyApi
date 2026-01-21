@@ -20,7 +20,7 @@ namespace Application
             _daprCacheService = daprCacheService;
         }
 
-        public async Task<CompanyDto?> GetCompanyByIdAsync(string id)
+        public async Task<CompanyDto?> GetCompanyByIdAsync(Guid id)
         {
             using var activity = ActivitySource.StartActivity("GetCompanyById");
             activity?.SetTag("company.id", id);
@@ -35,11 +35,11 @@ namespace Application
                     cacheActivity?.SetTag("cache.provider", "dapr");
                     activity?.SetTag("cache.hit", true);
                     
-                    System.Diagnostics.Debug.WriteLine($"? Cache HIT: Retrieved company {id} from Dapr/Redis");
+                    Debug.WriteLine($"? Cache HIT: Retrieved company {id} from Dapr/Redis");
                     
                     return new CompanyDto
                     {
-                        Id = cachedCompany.Id.ToString(),
+                        Id = cachedCompany.Id,
                         Name = cachedCompany.Name,
                         Vat = cachedCompany.Vat
                     };
@@ -53,14 +53,14 @@ namespace Application
             // Cache miss - get from database
             using (var dbActivity = ActivitySource.StartActivity("GetFromDatabase"))
             {
-                System.Diagnostics.Debug.WriteLine($"?? Cache MISS: Loading company {id} from database");
+                Debug.WriteLine($"?? Cache MISS: Loading company {id} from database");
                 
                 var company = await _repository.GetCompanyByIdAsync(id);
                 
                 if (company == null)
                 {
                     dbActivity?.SetTag("company.found", false);
-                    System.Diagnostics.Debug.WriteLine($"? Company {id} not found in database");
+                    Debug.WriteLine($"? Company {id} not found in database");
                     return null;
                 }
                 
@@ -69,11 +69,11 @@ namespace Application
                 // Store in Dapr cache for next time
                 await _daprCacheService.SetCompanyAsync(company);
                 
-                System.Diagnostics.Debug.WriteLine($"? Stored company {id} in Dapr/Redis cache");
+                Debug.WriteLine($"? Stored company {id} in Dapr/Redis cache");
 
                 return new CompanyDto
                 {
-                    Id = company.Id.ToString(),
+                    Id = company.Id,
                     Name = company.Name,
                     Vat = company.Vat
                 };

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain;
+﻿using Domain;
 using Microsoft.EntityFrameworkCore;
-using MongoDB.Bson;
 
 namespace Database
 {
@@ -30,7 +24,7 @@ namespace Database
 
         public async Task PatchAsync(Company company)
         {
-            var existing = await GetCompanyByIdAsync(company.Id.ToString());
+            var existing = await GetCompanyByIdAsync(company.Id);
             if (existing != null)
             {
                 if (!string.IsNullOrEmpty(company.Name))
@@ -48,13 +42,9 @@ namespace Database
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<Company?> GetCompanyByIdAsync(string id)
+        public async Task<Company?> GetCompanyByIdAsync(Guid id)
         {
-            if (!ObjectId.TryParse(id, out var objectId))
-            {
-                return null;
-            }
-            return await _dbContext.Companys.AsNoTracking().FirstOrDefaultAsync(c => c.Id == objectId);
+            return await _dbContext.Companys.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<List<Company>> GetAllCompaniesAsync()

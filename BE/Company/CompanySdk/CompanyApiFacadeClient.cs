@@ -44,39 +44,39 @@ namespace CompanyApi.Facade.Sdk
         System.Threading.Tasks.Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto createCompanydto, System.Threading.CancellationToken cancellationToken);
 
         /// <exception cref="RestException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<CompanyDto> GetCompanyByIdAsync(long id);
+        System.Threading.Tasks.Task<CompanyDto> GetCompanyByIdAsync(System.Guid id);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="RestException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<CompanyDto> GetCompanyByIdAsync(long id, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<CompanyDto> GetCompanyByIdAsync(System.Guid id, System.Threading.CancellationToken cancellationToken);
 
         /// <exception cref="RestException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<FileResponse> DeleteCompanyAsync(long id);
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="RestException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<FileResponse> DeleteCompanyAsync(long id, System.Threading.CancellationToken cancellationToken);
-
-        /// <exception cref="RestException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<FileResponse> UpdateCompanyAsync(long id, CreateCompanyDto companydto);
+        System.Threading.Tasks.Task<FileResponse> DeleteCompanyAsync(System.Guid id);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="RestException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<FileResponse> UpdateCompanyAsync(long id, CreateCompanyDto companydto, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<FileResponse> DeleteCompanyAsync(System.Guid id, System.Threading.CancellationToken cancellationToken);
 
         /// <exception cref="RestException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<FileResponse> PatchCompanyNameAsync(long id, string name);
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="RestException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<FileResponse> PatchCompanyNameAsync(long id, string name, System.Threading.CancellationToken cancellationToken);
-
-        /// <exception cref="RestException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<FileResponse> PatchCompanyVatAsync(long id, string vat);
+        System.Threading.Tasks.Task<FileResponse> UpdateCompanyAsync(System.Guid id, CreateCompanyDto companydto);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="RestException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<FileResponse> PatchCompanyVatAsync(long id, string vat, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<FileResponse> UpdateCompanyAsync(System.Guid id, CreateCompanyDto companydto, System.Threading.CancellationToken cancellationToken);
+
+        /// <exception cref="RestException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<FileResponse> PatchCompanyNameAsync(System.Guid id, string name);
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <exception cref="RestException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<FileResponse> PatchCompanyNameAsync(System.Guid id, string name, System.Threading.CancellationToken cancellationToken);
+
+        /// <exception cref="RestException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<FileResponse> PatchCompanyVatAsync(System.Guid id, string vat);
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <exception cref="RestException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<FileResponse> PatchCompanyVatAsync(System.Guid id, string vat, System.Threading.CancellationToken cancellationToken);
 
     }
 
@@ -298,14 +298,14 @@ namespace CompanyApi.Facade.Sdk
         }
 
         /// <exception cref="RestException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<CompanyDto> GetCompanyByIdAsync(long id)
+        public virtual System.Threading.Tasks.Task<CompanyDto> GetCompanyByIdAsync(System.Guid id)
         {
             return GetCompanyByIdAsync(id, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="RestException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<CompanyDto> GetCompanyByIdAsync(long id, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<CompanyDto> GetCompanyByIdAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -388,14 +388,14 @@ namespace CompanyApi.Facade.Sdk
         }
 
         /// <exception cref="RestException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<FileResponse> DeleteCompanyAsync(long id)
+        public virtual System.Threading.Tasks.Task<FileResponse> DeleteCompanyAsync(System.Guid id)
         {
             return DeleteCompanyAsync(id, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="RestException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<FileResponse> DeleteCompanyAsync(long id, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<FileResponse> DeleteCompanyAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -466,14 +466,14 @@ namespace CompanyApi.Facade.Sdk
         }
 
         /// <exception cref="RestException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<FileResponse> UpdateCompanyAsync(long id, CreateCompanyDto companydto)
+        public virtual System.Threading.Tasks.Task<FileResponse> UpdateCompanyAsync(System.Guid id, CreateCompanyDto companydto)
         {
             return UpdateCompanyAsync(id, companydto, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="RestException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<FileResponse> UpdateCompanyAsync(long id, CreateCompanyDto companydto, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<FileResponse> UpdateCompanyAsync(System.Guid id, CreateCompanyDto companydto, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -551,14 +551,14 @@ namespace CompanyApi.Facade.Sdk
         }
 
         /// <exception cref="RestException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<FileResponse> PatchCompanyNameAsync(long id, string name)
+        public virtual System.Threading.Tasks.Task<FileResponse> PatchCompanyNameAsync(System.Guid id, string name)
         {
             return PatchCompanyNameAsync(id, name, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="RestException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<FileResponse> PatchCompanyNameAsync(long id, string name, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<FileResponse> PatchCompanyNameAsync(System.Guid id, string name, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -635,14 +635,14 @@ namespace CompanyApi.Facade.Sdk
         }
 
         /// <exception cref="RestException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<FileResponse> PatchCompanyVatAsync(long id, string vat)
+        public virtual System.Threading.Tasks.Task<FileResponse> PatchCompanyVatAsync(System.Guid id, string vat)
         {
             return PatchCompanyVatAsync(id, vat, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="RestException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<FileResponse> PatchCompanyVatAsync(long id, string vat, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<FileResponse> PatchCompanyVatAsync(System.Guid id, string vat, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -855,7 +855,7 @@ namespace CompanyApi.Facade.Sdk
     {
 
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long Id { get; set; } = default!;
+        public System.Guid Id { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Name { get; set; } = default!;

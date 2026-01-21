@@ -1,3 +1,4 @@
+using System;
 using CompanyApi.Facade.Sdk;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -45,25 +46,25 @@ namespace CompanyFrontend.Services
             return await _companyClient.CreateCompanyAsync(companyDto);
         }
 
-        public async Task<FileResponse> UpdateCompanyAsync(string id, CreateCompanyDto companyDto)
+        public async Task<FileResponse> UpdateCompanyAsync(Guid id, CreateCompanyDto companyDto)
         {
             await PrepareAuthenticatedRequestAsync();
             return await _companyClient.UpdateCompanyAsync(id, companyDto);
         }
 
-        public async Task<FileResponse> DeleteCompanyAsync(string id)
+        public async Task<FileResponse> DeleteCompanyAsync(Guid id)
         {
             await PrepareAuthenticatedRequestAsync();
             return await _companyClient.DeleteCompanyAsync(id);
         }
 
-        public async Task<FileResponse> PatchCompanyName(string id, string name)
+        public async Task<FileResponse> PatchCompanyName(Guid id, string name)
         {
             await PrepareAuthenticatedRequestAsync();
             return await _companyClient.PatchCompanyNameAsync(id, name);
         }
 
-        public async Task<FileResponse> PatchCompanyVat(string id, string vat)
+        public async Task<FileResponse> PatchCompanyVat(Guid id, string vat)
         {
             await PrepareAuthenticatedRequestAsync();
             return await _companyClient.PatchCompanyVatAsync(id, vat);
