@@ -37,7 +37,9 @@ namespace CompanyFrontend.ViewModels
                 }
                 else
                 {
-                    ErrMessage = "Login failed. Please try again.";
+                    ErrMessage = !string.IsNullOrEmpty(_authService.LastError) 
+                        ? $"Login failed: {_authService.LastError}" 
+                        : "Login failed. Please try again.";
                 }
             }
             catch (Exception ex)

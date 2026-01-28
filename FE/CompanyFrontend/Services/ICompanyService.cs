@@ -7,7 +7,7 @@ namespace CompanyFrontend.Services
 {
     public interface ICompanyService
     {
-        Task<List<CompanyDto>> GetAllCompaniesAsync();
+        Task<List<CompanyDto>> GetAllCompaniesAsync(int pageNumber, int pageSize);
         Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto companyDto);
         Task<FileResponse> UpdateCompanyAsync(Guid id, CreateCompanyDto companyDto);
         Task<FileResponse> DeleteCompanyAsync(Guid id);

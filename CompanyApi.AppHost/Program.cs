@@ -4,10 +4,6 @@ using CommunityToolkit.Aspire.Hosting.Dapr;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-// Add Redis - Dapr l'utilisera comme state store
-var redis = builder.AddRedis("redis")
-    .WithRedisCommander(); // Interface web pour visualiser Redis
-
 var mongodb = builder.AddConnectionString("DefaultConnection");
 
 // Add your API project
@@ -27,7 +23,7 @@ companyApi
         AppProtocol = "https"
     });
 
-var notificationService = builder.AddProject<Projects.NotificationService>("notificationservice")
+builder.AddProject<Projects.NotificationService>("notificationservice")
     .WithDaprSidecar(new DaprSidecarOptions
     {
         AppId = "notification-service",

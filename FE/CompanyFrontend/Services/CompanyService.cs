@@ -34,10 +34,10 @@ namespace CompanyFrontend.Services
             }
         }
 
-        public async Task<List<CompanyDto>> GetAllCompaniesAsync()
+        public async Task<List<CompanyDto>> GetAllCompaniesAsync(int pageNumber, int pageSize)
         {
             await PrepareAuthenticatedRequestAsync();
-            return await _companyClient.GetAllCompaniesAsync();
+            return await _companyClient.GetAllCompaniesAsync(pageNumber, pageSize);
         }
 
         public async Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto companyDto)

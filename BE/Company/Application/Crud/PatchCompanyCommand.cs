@@ -16,18 +16,9 @@ namespace Application
 
         public async Task<Result> PatchCompanyNameAsync(Guid companyId, string Name)
         {
-            Company company = new Company
-            {
-                Id = companyId,
-                Name = Name
-            };
             try
             {
-                if (await repository.GetCompanyByIdAsync(company.Id) == null)
-                {
-                    return Result.Fail(new ValidationError("Company Not Found"));
-                }
-                await repository.PatchAsync(company);
+                await repository.PatchName(companyId, Name);
                 return Result.Ok();
             }
             catch (Exception ex)
@@ -38,18 +29,9 @@ namespace Application
 
         public async Task<Result> PatchCompanyVatAsync(Guid companyId, string Vat)
         {
-            Company company = new Company
-            {
-                Id = companyId,
-                Vat = Vat
-            };
             try
             {
-                if (await repository.GetCompanyByIdAsync(company.Id) == null)
-                {
-                    return Result.Fail(new ValidationError("Company Not Found"));
-                }
-                await repository.PatchAsync(company);
+                await repository.PatchVat(companyId, Vat);
                 return Result.Ok();
             }
             catch (Exception ex)

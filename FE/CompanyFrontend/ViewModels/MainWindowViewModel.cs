@@ -14,6 +14,10 @@ namespace CompanyFrontend.ViewModels
         private readonly ICompanyService _companyService;
         private readonly INavigationService _navigationService;
         private readonly IAuthService _authService;
+        
+        private int _currentPage = 1;
+        private const int _pageSize = 20; 
+        private bool _hasMoreData = true;
 
         [ObservableProperty]
         private string welcomeMessage = "Welcome";
@@ -23,6 +27,9 @@ namespace CompanyFrontend.ViewModels
 
         [ObservableProperty]
         private bool isLoading;
+
+        [ObservableProperty]
+        private bool isLoadingMore;
 
         [ObservableProperty]
         private bool isAdminUser;
@@ -43,33 +50,57 @@ namespace CompanyFrontend.ViewModels
         public async Task LoadCompanies()
         {
             IsLoading = true;
+            _currentPage = 1;
+            _hasMoreData = true;
             
-            try
+            try 
             {
                 Companies.Clear();
-
                 IsAdminUser = _authService.IsAdmin;
-
-                var companiesList = await _companyService.GetAllCompaniesAsync();
-
-                System.Diagnostics.Debug.WriteLine($"✅ Received {companiesList.Count} companies");
                 
-                foreach (var company in companiesList)
-                {
-                    Companies.Add(company);
-                    System.Diagnostics.Debug.WriteLine($"  Added: Id={company.Id}, Name={company.Name}, Vat={company.Vat}");
-                }
-                
-                System.Diagnostics.Debug.WriteLine($"✅ Companies collection count: {Companies.Count}");
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"❌ Error loading companies: {ex.Message}");
-                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+                await LoadNextPage();
             }
             finally
             {
                 IsLoading = false;
+            }
+        }
+        
+        public async Task LoadNextPage()
+        {
+
+            if (IsLoadingMore || !_hasMoreData) return;
+
+            try
+            {
+                IsLoadingMore = true;
+                
+                System.Diagnostics.Debug.WriteLine($"🔄 Loading page {_currentPage}...");
+                
+                var newBatch = await _companyService.GetAllCompaniesAsync(_currentPage, _pageSize);
+
+                if (newBatch.Count < _pageSize)
+                {
+                    _hasMoreData = false; // Plus de données après ça
+                    System.Diagnostics.Debug.WriteLine("🏁 End of data reached.");
+                }
+
+                foreach (var company in newBatch)
+                {
+                    Companies.Add(company);
+                }
+
+                System.Diagnostics.Debug.WriteLine($"✅ Added {newBatch.Count} companies. Total: {Companies.Count}");
+                
+                _currentPage++;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"❌ Error loading page {_currentPage}: {ex.Message}");
+            }
+            finally
+            {
+                IsLoadingMore = false;
             }
         }
 
@@ -88,12 +119,8 @@ namespace CompanyFrontend.ViewModels
         [RelayCommand]
         public async Task Logout()
         {
-            // 1. Nettoyer le cache MSAL (Token)
             await _authService.LogoutAsync();
-
             IsAdminUser = false;
-
-            // 2. Retourner à la page de login
             _navigationService.NavigateToLogin();
         }
 
@@ -107,13 +134,10 @@ namespace CompanyFrontend.ViewModels
             {
                 var index = Companies.IndexOf(existingCompany);
                 Companies[index] = updatedCompany;
-                
-                System.Diagnostics.Debug.WriteLine($"✅ Company {updatedCompany.Id} updated in collection at index {index}");
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine($"⚠️ Company {updatedCompany.Id} not found in collection, adding it");
-                Companies.Add(updatedCompany);
+                Companies.Insert(0, updatedCompany); 
             }
 
             _navigationService.NavigateToList();
@@ -121,7 +145,7 @@ namespace CompanyFrontend.ViewModels
 
         public void OnCompanyCreated(CompanyDto createdCompany)
         {
-            Companies.Add(createdCompany);
+            Companies.Insert(0, createdCompany);
             _navigationService.NavigateToList();
         }
     }

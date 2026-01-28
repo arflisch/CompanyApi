@@ -18,7 +18,8 @@
                     Background="#555555"/>
         </StackPanel>
         
-        <DataGrid ItemsSource="{Binding Companies}"
+        <DataGrid x:Name="CompaniesGrid"
+                  ItemsSource="{Binding Companies}"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
                   GridLinesVisibility="All"

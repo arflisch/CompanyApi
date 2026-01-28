@@ -1,8 +1,12 @@
-﻿using Application.Services;
+﻿
+using System.Collections.Generic;
+using Application.Services;
 using Database;
 using Domain;
 using Domain.DTO;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Application
 {
@@ -20,7 +24,7 @@ namespace Application
             _daprCacheService = daprCacheService;
         }
 
-        public async Task<List<CompanyDto>> GetAllCompaniesAsync()
+        public async Task<List<CompanyDto>> GetAllCompaniesAsync(int pageNumber, int pageSize)
         {
             using var activity = ActivitySource.StartActivity("GetAllCompanies");
             
@@ -33,8 +37,6 @@ namespace Application
                     cacheActivity?.SetTag("companies.count", cachedCompanies.Count);
                     cacheActivity?.SetTag("cache.provider", "dapr");
                     activity?.SetTag("cache.hit", true);
-                    
-                    System.Diagnostics.Debug.WriteLine($"✅ Cache HIT: Retrieved {cachedCompanies.Count} companies from Dapr/Redis");
                     
                     return cachedCompanies.Select(c => new CompanyDto
                     {
@@ -54,7 +56,7 @@ namespace Application
             {
                 System.Diagnostics.Debug.WriteLine("⚠️ Cache MISS: Loading companies from database");
                 
-                var allCompanies = await _repository.GetAllCompaniesAsync();
+                var allCompanies = await _repository.GetAllCompaniesAsync(pageNumber, pageSize);
                 
                 dbActivity?.SetTag("companies.count", allCompanies.Count);
                 

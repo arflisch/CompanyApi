@@ -10,6 +10,6 @@ namespace Application
 {
     public interface IGetCompaniesCommand
     {
-         Task<List<CompanyDto>> GetAllCompaniesAsync();
+         Task<List<CompanyDto>> GetAllCompaniesAsync(int pageNumber, int pageSize);
     }
 }

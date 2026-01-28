@@ -31,6 +31,7 @@ builder.Services.AddTransient<IDeleteCompanyCommand, DeleteCompanyCommand>();
 builder.Services.AddTransient<IPatchCompanyCommand, PatchCompanyCommand>();
 builder.Services.AddTransient<IGetCompaniesCommand, GetCompaniesCommand>();
 builder.Services.AddTransient<IGetCompanyByIdCommand, GetCompanyByIdCommand>();
+builder.Services.AddTransient<IGetCompanyByNameCommand, GetCompanyByNameCommand>();
 builder.Services.AddSingleton<Application.Metrics.CompanyMetrics>();
 
 // Register Dapr cache service
@@ -41,12 +42,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CompanyDtoValidator>();
 
-builder.Services.AddDbContext<dbContext>(options =>
-{
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    options.UseMongoDB(connectionString, "company_db");
-    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-});
+builder.Services.AddMongoDatabase<CompanyContext>(builder.Configuration, "CompanyDb");
 
 // Register the repository
 builder.Services.AddScoped<ICompanyRepository<Company>, CompanyRepository>();
@@ -59,9 +55,11 @@ builder.Services.AddOpenApiDocument(option =>
     {
         postProcess.Info.Title = "Facade contracts are only used by Guis and no perinity is provided.";
     };
+
 });
 
-
+// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//     .AddMicrosoftIdentityWebApi(builder.Configuration);
 var app = builder.Build();
 
 try

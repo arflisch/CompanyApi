@@ -3,11 +3,12 @@ using Domain;
 using Domain.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.Identity.Web.Resource;
 
 namespace CompanyApi.Controllers
 {
     [Authorize]
+    [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
     [ApiController]
     [Route("[controller]")]
     [ApiExplorerSettings(GroupName = "facade")]
@@ -21,10 +22,14 @@ namespace CompanyApi.Controllers
         }
 
         [HttpGet]
-        public async Task<List<CompanyDto>> GetAllCompanies([FromServices] IGetCompaniesCommand getCompaniesCommand) 
+        public async Task<List<CompanyDto>> GetAllCompanies(
+            [FromServices] IGetCompaniesCommand getCompaniesCommand,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 20
+            ) 
         {
             _logger.LogInformation("Retrieving all companies");
-            return await getCompaniesCommand.GetAllCompaniesAsync();
+            return await getCompaniesCommand.GetAllCompaniesAsync(pageNumber, pageSize);
         }
 
         [HttpGet("{id:guid}")]
@@ -50,6 +55,28 @@ namespace CompanyApi.Controllers
             }
 
             _logger.LogInformation("Company with Id: {CompanyId} retrieved successfully", id);
+            return Ok(company);
+        }
+
+        [HttpGet("{name}")]
+        [ProducesResponseType(typeof(CompanyDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetCompanyByName(string name,
+            [FromServices] IGetCompanyByNameCommand getCompanyByNameCommand)
+        {
+            _logger.LogInformation("Getting company with name: {CompanyName}", name);
+            var company = await getCompanyByNameCommand.GetCompanyByNameAsync(name);
+            if (company == null)
+            {
+                _logger.LogWarning("Company with name: {CompanyName} not found", name);
+                return NotFound(new ProblemDetails
+                {
+                    Title = "Company not found",
+                    Status = StatusCodes.Status404NotFound,
+                    Detail = $"Company with name {name} does not exist"
+                });
+            }
+            _logger.LogInformation("Company with name: {CompanyName} retrieved successfully", name);
             return Ok(company);
         }
 
